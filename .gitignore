@@ -1,0 +1,19 @@
+# Postgrest
+src/Postgrest/bin
+src/Postgrest/obj
+src/Postgrest/.idea
+
+# PostgrestExmaple
+src/PostgrestExample/bin
+src/PostgrestExample/obj
+src/PostgrestExample/.idea
+
+# vscode
+.vscode
+
+# idea
+.idea
+
+# .ionide
+.ionide
+
