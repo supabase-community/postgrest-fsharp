@@ -1,17 +1,40 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
-// printfn "Hello from F#"
+﻿// open Postgrest
+open Postgrest.CEConnection
+open Postgrest.CEClient
 
-open Postgrest
-open Postgrest.StatelessClient
+// open Postgrest.StatelessClient
 
 // StatelessClient.connect "url" "apiKey"
 // |> StatelessClient.execute
 
-printfn "\n"
+// PostgrestClient.connect "url"
+// PostgrestClient.execute ()
 
-PostgrestClient.connect "url"
-PostgrestClient.execute ()
+// PostgrestClient.connectWithHeaders
+//     baseUrl
+//     (
+//      Map [
+//         "apiKey", apiKey
+//         "Bearer ", apiKey
+//         ]
+//      )
 
-PostgrestClient.connectWithHeaders "url" (Some(Map ["apiKey", "fasfasf"]))
-PostgrestClient.execute ()
+// PostgrestClient.execute ()
 
+let baseUrl = "https://uxdshctvypcjmjmwqndw.supabase.co/rest/v1/"
+let apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA"
+
+let conn = lazy connection {
+     url baseUrl
+     headers (Map [ "apiKey", apiKey
+                    "Bearer", apiKey ]
+    )
+}
+
+printfn $"{conn}"
+
+let result =
+    conn.Value
+    |> from "test"
+    |> execute
+    

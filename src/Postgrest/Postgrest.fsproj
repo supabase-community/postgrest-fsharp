@@ -9,6 +9,8 @@
     <Compile Include="Connection.fs" />
     <Compile Include="Client.fs" />
     <Compile Include="StatelessClient.fs" />
+    <Compile Include="CEConnection.fs" />
+    <Compile Include="CEClient.fs" />
   </ItemGroup>
-
+  
 </Project>
