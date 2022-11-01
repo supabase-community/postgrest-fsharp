@@ -1,66 +1,304 @@
-﻿namespace Postgrest
+namespace Postgrest.Client
 
-open System.Net
+open System.Text
+open FSharp.Json
+open Postgrest.Connection
 open System.Net.Http
-open System.Net.Http.Headers
-
-module PostgrestClient =
-    open Postgrest.Connection
-   
-    let finalUrl = "https://uxdshctvypcjmjmwqndw.supabase.co/rest/v1/test?select=%2A&order=name.asc.nullslast"
     
-    let mutable private connection: Connection.PostgrestClientConnection = {
-        Url = ""
-        Headers = None
+[<AutoOpen>]
+module Client =
+    type Query = {
+        Connection:  PostgrestConnection
+        Table:       string
+        QueryString: string
     }
     
-    let private _connect (url: string) (headers: Option<Map<string, string>>) =
-        connection <- {
-            Url = url
-            Headers = headers
-        }
-       
-    let connect (url: string) = None |> _connect url
+    type GetRequest = {
+        Query:             Query
+        QueryFilterString: string option
+    }
+    
+    type PostRequest = {
+        Query: Query
+        Body:  string
+    }
+    
+    type FilterValue =
+        | String of string
+        | Int    of int
+        | Double of double
+        | Float  of float
+        | Bool   of bool
+    
+    type Filter =
+        | EQ  of  string * FilterValue
+        | GT  of  string * FilterValue
+        | GTE of  string * FilterValue
+        | LT  of  string * FilterValue
+        | LTE of  string * FilterValue
+        | NEQ of  string * FilterValue
+        | NOT of  Filter
+        | OR  of  Filter * Filter
+        | AND of  Filter * Filter
         
-    let connectWithHeaders (url: string) (headers: Map<string, string>) = Some(headers) |> _connect url
-     
+    type FilterIn<'a> = string * 'a list
+        
     let private addHeader (key: string) (value: string) (client: HttpClient) = 
         client.DefaultRequestHeaders.Add(key, value)
     
     let private addHeaders (headers: (string * string) list) (client: HttpClient) =
         headers
         |> List.iter (fun (key, value) -> client |> addHeader key value)
+    
+    let private parseColumns (columns: string list option): string =
+        match columns with
+        | Some cols ->
+            match cols.IsEmpty with
+            | true -> "*"
+            | _    -> cols |> List.reduce(fun acc item -> $"{acc},{item}")
+        | None   -> "*"
         
-    let execute () =
+    let parseFilterValue (filterValue: FilterValue): string =
+        match filterValue with
+        | String s -> s
+        | Int    i -> i.ToString()
+        | Double d -> d.ToString()
+        | Float  f -> f.ToString()
+        | Bool   b -> b.ToString()
+    
+    let rec private buildFilterString (filter: Filter): string = 
+        match filter with
+        | EQ  (field, value) -> $"{field}=eq." + parseFilterValue value
+        | GT  (field, value) -> $"{field}=gt." + parseFilterValue value
+        | GTE (field, value) -> $"{field}=gte." + parseFilterValue value
+        | LT  (field, value) -> $"{field}=lt." + parseFilterValue value
+        | LTE (field, value) -> $"{field}=lte." + parseFilterValue value
+        | NEQ (field, value) -> $"{field}=neq." + parseFilterValue value
+        | NOT f              -> "not." + buildFilterString f
+        | OR  (f1, f2)       -> "or=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
+        | AND (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
+    
+    let from (table: string) (conn: PostgrestConnection): Query =
+        { Connection  = conn
+          Table       = table
+          QueryString = "" }
+        
+    let select (columns: string list option) (query: Query): GetRequest =
+        let queryString = parseColumns columns
+        
+        { Query             = { query with QueryString = $"?select={queryString}" }
+          QueryFilterString = None }
+        
+    let insert (data: 'a) (query: Query): PostRequest =
+        let body = Json.serialize data
+        
+        { Query = { query with QueryString = "?insert" }
+          Body  = body }
+        
+    let private concatQueryFilterString (queryFilterString: string option): string =
+        match queryFilterString with
+            | Some fs -> fs
+            | _       -> ""
+    
+    let filter (filter: Filter) (request: GetRequest): GetRequest =
+        let currentQueryFilterString = request.QueryFilterString |> concatQueryFilterString
+        let filterString = $"{currentQueryFilterString}&" + (filter |> buildFilterString)
+        
+        { Query             = request.Query
+          QueryFilterString = Some filterString }
+        
+    let in_ (filterIn: string * 'a list) (request: GetRequest): GetRequest =
+        let stringValues = (snd filterIn) |> List.map (fun item -> item.ToString())
+        let currentQueryFilterString = request.QueryFilterString |> concatQueryFilterString
+        
+        let filterString = $"{currentQueryFilterString}&{fst filterIn}=in." + "(" +
+                           (stringValues |> List.reduce(fun acc item -> $"{acc},{item}")) + ")"
+        { Query             = request.Query
+          QueryFilterString = Some filterString }
+        
+    let executeSelect<'T> (request: GetRequest) =
         let result =
             task {
                 use client = new HttpClient()
                 
-                client |> addHeaders [("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-                                      ("apiKey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")]
+                let headers = request.Query.Connection.Headers
+                client |> addHeaders (Map.toList headers)
                 
-                // client |> addHeader "Bearer" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA"
-                // client |> addHeader "apiKey" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA"
-
-                let! response = client.GetStringAsync(finalUrl)
-                return response
-                // client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-                // client.DefaultRequestHeaders.Add("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-                // client.DefaultRequestHeaders.Add("apiKey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-                
+                let! response =
+                    let query = request.Query
+                    
+                    let queryFilterString =
+                        match request.QueryFilterString with
+                        | Some qfs -> qfs
+                        | _        -> ""
+                    let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}{queryFilterString}"
+                    
+                    client.GetAsync(url)
+                return! response.Content.ReadAsStringAsync()
             } |> Async.AwaitTask |> Async.RunSynchronously
-            
-        printfn $"{result}"
-        // printfn $"{connection}"
-    
-    // let executeAsync () =
-    //     task {
+        Json.deserialize<'T> result
+        
+    let executeInsert (request: PostRequest) =
+        let result =
+            task {
+                use client = new HttpClient()
+                
+                let headers = request.Query.Connection.Headers
+                client |> addHeaders (Map.toList headers)
+                // client |> addHeader "Content-Type" "application/json"
+                
+                let! response =
+                    let query = request.Query
+                    let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}"
+                    // let content = new StringContent(request.Body)
+                    let content = new StringContent(request.Body, Encoding.UTF8, "application/json");
+                    
+                    printfn $"{url}"
+                    printfn $"{content}"
+                    
+                    client.PostAsync(url, content)
+                return! response.Content.ReadAsStringAsync()
+            } |> Async.AwaitTask |> Async.RunSynchronously
+        printfn $"RESULT: {result}"
+        ()
+        
+      
+    // let execute (request: Request) =
+    //     let result =
+    //         task {
     //             use client = new HttpClient()
-    //            
-    //             // client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-    //             client.DefaultRequestHeaders.Add("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-    //             client.DefaultRequestHeaders.Add("apiKey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA")
-    //
-    //             let! response = client.GetStringAsync(finalUrl)
-    //             return response
-    //         }
+    //             
+    //             let headers =
+    //                 match request with
+    //                     | GET  r -> r.Query.Connection.Headers
+    //                     | POST r -> r.Query.Connection.Headers
+    //             client |> addHeaders (Map.toList headers)
+    //             
+    //             let! response =
+    //                 match request with
+    //                 | GET  r ->
+    //                     let query = r.Query
+    //                     
+    //                     let queryFilterString =
+    //                         match r.QueryFilterString with
+    //                         | Some qfs -> qfs
+    //                         | _        -> ""
+    //                     let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}{queryFilterString}"
+    //                     
+    //                     client.GetAsync(url)
+    //                 | POST r ->
+    //                     let query = r.Query
+    //                     let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}"
+    //                     let content = new StringContent(r.Body)
+    //                     
+    //                     client.PostAsync(url, content)
+    //             return! response.Content.ReadAsStringAsync()
+    //         } |> Async.AwaitTask |> Async.RunSynchronously
+    //     printfn $"RESULT: {result}"
+    //     ()
+
+// namespace Postgrest.Client
+//
+// open FSharp.Json
+// open Postgrest.Connection
+// open System.Net.Http
+//     
+// [<AutoOpen>]
+// module Client =
+//     type Query = {
+//         Connection:        PostgrestConnection
+//         Table:             string
+//         QueryString:       string
+//     }
+//     
+//     type GetRequest = {
+//         Query: Query
+//         QueryFilterString: string option
+//     }
+//     
+//     type PostRequest = {
+//         Query: Query
+//         Body:  string
+//     }
+//     
+//     type Request =
+//         | GET  of GetRequest
+//         | POST of PostRequest
+//         
+//     type Filter =
+//         | EQ of string * string
+//         
+//     let private addHeader (key: string) (value: string) (client: HttpClient) = 
+//         client.DefaultRequestHeaders.Add(key, value)
+//     
+//     let private addHeaders (headers: (string * string) list) (client: HttpClient) =
+//         headers
+//         |> List.iter (fun (key, value) -> client |> addHeader key value)
+//     
+//     let private parseColumns (columns: string list option): string =
+//         match columns with
+//         | Some cols ->
+//             match cols.IsEmpty with
+//             | true -> "*"
+//             | _    -> cols |> List.reduce(fun acc item -> $"{acc},{item}")
+//         | None   -> "*"
+//     
+//     let private buildFilterString (filter: Filter): string =
+//         match filter with
+//         | EQ (field, value) -> $"${field}=eq.{value}"
+//     
+//     let from (table: string) (conn: PostgrestConnection): Query =
+//         { Connection = conn
+//           Table = table
+//           QueryString = "" }
+//         
+//     let select (columns: string list option) (query: Query): GetRequest =
+//         let queryString = parseColumns columns
+//         
+//         { Query = { query with QueryString = $"?select={queryString}" }
+//           QueryFilterString = None }
+//         
+//     let insert data (query: Query): PostRequest =
+//         let body = Json.serialize data
+//         
+//         { Query = { query with QueryString = "?insert}" }
+//           Body  = body }
+//         
+//     let filter (filter: Filter) (request: GetRequest): GetRequest =
+//         let filterString = filter |> buildFilterString
+//         
+//         { request with QueryFilterString = Some filterString }
+//       
+//     let execute (request: Request) =
+//         let result =
+//             task {
+//                 use client = new HttpClient()
+//                 
+//                 let headers =
+//                     match request with
+//                         | GET  r -> r.Query.Connection.Headers
+//                         | POST r -> r.Query.Connection.Headers
+//                 client |> addHeaders (Map.toList headers)
+//                 
+//                 let! response =
+//                     match request with
+//                     | GET  r ->
+//                         let query = r.Query
+//                         
+//                         let queryFilterString =
+//                             match r.QueryFilterString with
+//                             | Some qfs -> qfs
+//                             | _        -> ""
+//                         let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}{queryFilterString}"
+//                         
+//                         client.GetAsync(url)
+//                     | POST r ->
+//                         let query = r.Query
+//                         let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}"
+//                         let content = new StringContent(r.Body)
+//                         
+//                         client.PostAsync(url, content)
+//                 return! response.Content.ReadAsStringAsync()
+//             } |> Async.AwaitTask |> Async.RunSynchronously
+//         printfn $"RESULT: {result}"
+//         ()
