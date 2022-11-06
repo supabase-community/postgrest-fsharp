@@ -1,4 +1,4 @@
-namespace Postgrest.QueryFilter
+namespace Postgrest
 
 open Postgrest.Common
 
@@ -54,12 +54,11 @@ module QueryFilter =
         match queryFilterString with
         | Some fs -> fs
         | _       -> ""
-        
+    
+    let private first (a, _, _) = a
+    let private middle (_, b, _) = b
+    let private third (_, _, c) = c 
     let private getOrderByString (orderBy: string * OrderType option * OrderNull option): string =
-        let first (a, _, _) = a
-        let middle (_, b, _) = b
-        let third (_, _, c) = c
-        
         let item = orderBy |> first
         
         let orderType =
@@ -80,32 +79,46 @@ module QueryFilter =
             
         $"{item}{orderType}{orderNull}"
     
-    let filter (filter: Filter) (request: GetRequest): GetRequest =
-        let currentQueryFilterString = request.QueryFilterString |> concatQueryFilterString
+    let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+        let currentQueryFilterString = pfb.QueryFilterString |> concatQueryFilterString
         let filterString = $"{currentQueryFilterString}&" + (filter |> buildFilterString)
         
-        { request with QueryFilterString = Some filterString }
+        { pfb with QueryFilterString = Some filterString }
         
-    let in_ (filterIn: string * 'a list) (request: GetRequest): GetRequest =
+    let in_ (filterIn: string * 'a list) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let stringValues = (snd filterIn) |> List.map (fun item -> item.ToString())
-        let currentQueryFilterString = request.QueryFilterString |> concatQueryFilterString
+        let currentQueryFilterString = pfb.QueryFilterString |> concatQueryFilterString
         
         let filterString = $"{currentQueryFilterString}&{fst filterIn}=in." + "(" +
                            (stringValues |> List.reduce(fun acc item -> $"{acc},{item}")) + ")"
-        { request with QueryFilterString = Some filterString }
+        { pfb with QueryFilterString = Some filterString }
     
     let order (orderBy: (string * OrderType option * OrderNull option) list)
-              (request: GetRequest): GetRequest =
+              (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let orderByItems = orderBy |> List.map getOrderByString
         let orderByString =
             match orderByItems.IsEmpty with
             | true -> ""
             | _    -> "&order=" + (orderByItems |> List.reduce(fun acc item -> $"{acc},{item}"))
         
-        { request with QueryOrderString  = Some orderByString }
+        { pfb with QueryOrderString  = Some orderByString }
         
-    let limit (items: int) (request: GetRequest): GetRequest =
-        { request with QueryLimitString = Some $"&limit={items}" }
+    let limit (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+        { pfb with QueryLimitString = Some $"&limit={items}" }
         
-    let offset (items: int) (request: GetRequest): GetRequest =
-        { request with QueryOffsetString = Some $"&offset={items}" }
+    let offset (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+        { pfb with QueryOffsetString = Some $"&offset={items}" }
+        
+    let one (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+        let updatedHeaders =
+            match pfb.Query.Connection.Headers.TryFind "Accept" with
+            | Some header ->
+                let splitedHeader = header.Split "/"
+                match splitedHeader.Length = 2  with
+                | true ->
+                    pfb.Query.Connection.Headers.Add("Accept", $"{splitedHeader[0]}/vnd.pgrst.object+{splitedHeader[1]}")
+                | false ->
+                    pfb.Query.Connection.Headers.Add("Accept", $"{splitedHeader[0]}/vnd.pgrst.object")
+            | None        -> pfb.Query.Connection.Headers.Add("Accept", "application/vnd.pgrst.object")
+        
+        { pfb with Query = { pfb.Query with Connection = { Headers = updatedHeaders ; Url = pfb.Query.Connection.Url } } }

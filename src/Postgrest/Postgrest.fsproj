@@ -6,9 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="StatefulConnection.fs" />
-    <Compile Include="StatefulClient.fs" />
-    
     <Compile Include="Connection.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="QueryFilter.fs" />

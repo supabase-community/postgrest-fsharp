@@ -1,5 +1,6 @@
-namespace Postgrest.Client
+namespace Postgrest
 
+open System
 open FSharp.Json
 open Postgrest.Connection
 open Postgrest.Common
@@ -7,104 +8,151 @@ open System.Text
 open System.Net.Http
     
 [<AutoOpen>]
-module Client =
-    type Columns =
-        | ALL
-        | COLS of string list
-        
-    let private addHeader (key: string) (value: string) (client: HttpClient) = 
-        client.DefaultRequestHeaders.Add(key, value)
-    
-    let private addHeaders (headers: (string * string) list) (client: HttpClient) =
-        headers
-        |> List.iter (fun (key, value) -> client |> addHeader key value)
-    
-    let private parseColumns (columns: Columns): string =
-        match columns with
-        | COLS cols ->
-            match cols.IsEmpty with
-            | true -> "*"
-            | _    -> cols |> List.reduce(fun acc item -> $"{acc},{item}")
-        | ALL      -> "*"
-    
+module Client =   
     let from (table: string) (conn: PostgrestConnection): Query =
         { Connection  = conn
           Table       = table
           QueryString = "" }
         
-    let select (columns: Columns) (query: Query): GetRequest =
+    let select (columns: Columns) (query: Query): PostgrestFilterBuilder =
         let queryString = parseColumns columns
-        
         { Query             = { query with QueryString = $"?select={queryString}" }
           QueryFilterString = None
           QueryOrderString  = None
           QueryLimitString  = None
-          QueryOffsetString = None }
+          QueryOffsetString = None
+          Body              = None
+          RequestType       = Select }
         
-    let insert (data: 'a) (query: Query): PostRequest =
+    let delete (query: Query): PostgrestFilterBuilder =
+        { Query             = { query with QueryString = "?delete" }
+          QueryFilterString = None
+          QueryOrderString  = None
+          QueryLimitString  = None
+          QueryOffsetString = None
+          Body              = None
+          RequestType       = Delete }
+        
+    let update (data: 'a) (query: Query): PostgrestFilterBuilder =
+        { Query             = { query with QueryString = "?update" }
+          QueryFilterString = None
+          QueryOrderString  = None
+          QueryLimitString  = None
+          QueryOffsetString = None
+          Body              = Some (Json.serialize data)
+          RequestType       = Update }
+        
+    let insert (data: 'a) (query: Query): PostgrestBuilder =
         let body = Json.serialize data
         
         { Query = { query with QueryString = "?insert" }
           Body  = body }
-        
-    let private parseOptionalQueryString (queryString: string option): string =
-        match queryString with
-        | Some value -> value
-        | None       -> ""
-        
-    let executeSelect<'T> (request: GetRequest) =
+    
+    let private executeSelect<'T> (pfb: PostgrestFilterBuilder): HttpResponseMessage =
         let result =
             task {
-                use client = new HttpClient()
+                let client = new HttpClient()
                 
-                let headers = request.Query.Connection.Headers
+                let headers = pfb.Query.Connection.Headers
                 client |> addHeaders (Map.toList headers)
                 
                 let! response =
-                    let query = request.Query
+                    let query = pfb.Query
                     
-                    let queryFilterString = request.QueryFilterString |> parseOptionalQueryString
-                    let queryOrderString = request.QueryOrderString |> parseOptionalQueryString
-                    let queryLimitString = request.QueryLimitString |> parseOptionalQueryString
-                    let queryOffsetString = request.QueryOffsetString |> parseOptionalQueryString
+                    let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
+                    let queryOrderString = pfb.QueryOrderString |> parseOptionalQueryString
+                    let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
+                    let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
                         
                     let url =
-                        query.Connection.Url + $"/{query.Table}" + query.QueryString +
-                        queryFilterString + queryOrderString + queryLimitString +
-                        queryOffsetString
+                        query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                        + queryOrderString + queryLimitString + queryOffsetString
                     
                     printfn $"{url}"
-                    
                     client.GetAsync(url)
-                return! response.Content.ReadAsStringAsync()
+                return response
             } |> Async.AwaitTask |> Async.RunSynchronously
-        try
-            let res = Json.deserialize<'T> result
-            printfn $"{res}"
-        with
-            _ -> printfn "misstype json"
+        result
         
-        printfn $"{result}"
-    let executeInsert (request: PostRequest) =
+    let private executeDelete (pfb: PostgrestFilterBuilder): HttpResponseMessage =
         let result =
             task {
-                use client = new HttpClient()
+                let client = new HttpClient()
                 
-                let headers = request.Query.Connection.Headers
+                let headers = pfb.Query.Connection.Headers
                 client |> addHeaders (Map.toList headers)
-                // client |> addHeader "Content-Type" "application/json"
                 
                 let! response =
-                    let query = request.Query
+                    let query = pfb.Query
+                    
+                    let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
+                    let url = query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                    
+                    printfn $"{url}"
+                    client.DeleteAsync(url)
+                return response
+            } |> Async.AwaitTask |> Async.RunSynchronously
+        result
+    
+    let private executeUpdate (pfb: PostgrestFilterBuilder): HttpResponseMessage =
+        let result =
+            task {
+                let client = new HttpClient()
+                
+                let headers = pfb.Query.Connection.Headers
+                client |> addHeaders (Map.toList headers)
+                
+                let! response =
+                    let query = pfb.Query
+                    
+                    let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
+                    let url = query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                    let contentBody =
+                        match pfb.Body with
+                        | Some body -> body
+                        | None      -> raise (Exception "Missing body")
+                        
+                    let content = new StringContent(contentBody, Encoding.UTF8, "application/json")
+                    
+                    printfn $"{url}"
+                    printf $"{contentBody}"
+                    client.PatchAsync(url, content)
+                return response
+            } |> Async.AwaitTask |> Async.RunSynchronously
+        result
+        
+    let execute (pfb: PostgrestFilterBuilder) =
+        match pfb.RequestType with
+        | Select -> pfb |> executeSelect
+        | Delete -> pfb |> executeDelete
+        | Update -> pfb |> executeUpdate
+   
+    let executeInsert (pb: PostgrestBuilder) =
+        let result =
+            task {
+                let client = new HttpClient()
+                
+                let headers = pb.Query.Connection.Headers
+                client |> addHeaders (Map.toList headers)
+                
+                let! response =
+                    let query = pb.Query
                     let url = $"{query.Connection.Url}/{query.Table}{query.QueryString}"
-                    // let content = new StringContent(request.Body)
-                    let content = new StringContent(request.Body, Encoding.UTF8, "application/json");
+                    let content = new StringContent(pb.Body, Encoding.UTF8, "application/json");
                     
                     printfn $"{url}"
                     printfn $"{content}"
-                    
                     client.PostAsync(url, content)
-                return! response.Content.ReadAsStringAsync()
+                return response
             } |> Async.AwaitTask |> Async.RunSynchronously
         printfn $"RESULT: {result}"
-        ()
+        result
+       
+    let getResponseBody (responseMessage: HttpResponseMessage): string = 
+        responseMessage.Content.ReadAsStringAsync()
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+    
+    let parseResponse<'T> (responseMessage: HttpResponseMessage): 'T =
+        let response = responseMessage |> getResponseBody
+        Json.deserialize<'T> response
