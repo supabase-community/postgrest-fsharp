@@ -12,8 +12,8 @@ A F# client library for Postgrest
   	- [] Offset w/ Foreign Key
 	- [] Filters
   	- [] Ordering
-  - [] Insert
-  - [] Delete
-  - [] Update
+  - [x] Insert
+  - [x] Delete
+  - [x] Update
 - [] Unit testing
 - [] Release on NuGet
