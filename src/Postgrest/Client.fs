@@ -1,11 +1,11 @@
 namespace Postgrest
 
 open System
+open System.Text
+open System.Net.Http
 open FSharp.Json
 open Postgrest.Connection
 open Postgrest.Common
-open System.Text
-open System.Net.Http
     
 [<AutoOpen>]
 module Client =   
@@ -34,12 +34,14 @@ module Client =
           RequestType       = Delete }
         
     let update (data: 'a) (query: Query): PostgrestFilterBuilder =
+        let body = Json.serialize data
+        
         { Query             = { query with QueryString = "?update" }
           QueryFilterString = None
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
-          Body              = Some (Json.serialize data)
+          Body              = Some body
           RequestType       = Update }
         
     let insert (data: 'a) (query: Query): PostgrestBuilder =

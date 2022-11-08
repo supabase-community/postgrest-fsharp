@@ -12,19 +12,19 @@ module QueryFilter =
         | Bool   of bool
     
     type Filter =
-        | EQ  of  string * FilterValue
-        | GT  of  string * FilterValue
-        | GTE of  string * FilterValue
-        | LT  of  string * FilterValue
-        | LTE of  string * FilterValue
-        | NEQ of  string * FilterValue
-        | NOT of  Filter
-        | OR  of  Filter * Filter
-        | AND of  Filter * Filter
+        | OpEqual            of  string * FilterValue
+        | OpGreaterThan      of  string * FilterValue
+        | OpGreaterThanEqual of  string * FilterValue
+        | OpLessThan         of  string * FilterValue
+        | OpLessThanEqual    of  string * FilterValue
+        | OpNotEqual         of  string * FilterValue
+        | OpNot              of  Filter
+        | OpOr               of  Filter * Filter
+        | OpAnd              of  Filter * Filter
         
     type OrderType =
-        | ASC
-        | DSC
+        | Ascending
+        | Descending
         
     type OrderNull =
         | NullFirst
@@ -40,15 +40,15 @@ module QueryFilter =
     
     let rec private buildFilterString (filter: Filter): string = 
         match filter with
-        | EQ  (field, value) -> $"{field}=eq." + parseFilterValue value
-        | GT  (field, value) -> $"{field}=gt." + parseFilterValue value
-        | GTE (field, value) -> $"{field}=gte." + parseFilterValue value
-        | LT  (field, value) -> $"{field}=lt." + parseFilterValue value
-        | LTE (field, value) -> $"{field}=lte." + parseFilterValue value
-        | NEQ (field, value) -> $"{field}=neq." + parseFilterValue value
-        | NOT f              -> "not." + buildFilterString f
-        | OR  (f1, f2)       -> "or=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
-        | AND (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
+        | OpEqual  (field, value) -> $"{field}=eq." + parseFilterValue value
+        | OpGreaterThan  (field, value) -> $"{field}=gt." + parseFilterValue value
+        | OpGreaterThanEqual (field, value) -> $"{field}=gte." + parseFilterValue value
+        | OpLessThan  (field, value) -> $"{field}=lt." + parseFilterValue value
+        | OpLessThanEqual (field, value) -> $"{field}=lte." + parseFilterValue value
+        | OpNotEqual (field, value) -> $"{field}=neq." + parseFilterValue value
+        | OpNot f              -> "not." + buildFilterString f
+        | OpOr  (f1, f2)       -> "or=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
+        | OpAnd (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
     
     let private concatQueryFilterString (queryFilterString: string option): string =
         match queryFilterString with
@@ -65,8 +65,8 @@ module QueryFilter =
            match orderBy |> middle with
            | Some s ->
                 match s with
-                | ASC -> ".asc"
-                | DSC -> ".desc"
+                | Ascending  -> ".asc"
+                | Descending -> ".desc"
            | None   -> ""
            
         let orderNull =

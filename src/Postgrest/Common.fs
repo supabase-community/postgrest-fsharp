@@ -34,8 +34,8 @@ module Common =
     }
     
     type Columns =
-        | ALL
-        | COLS of string list
+        | All
+        | Cols of string list
     
     let withAuth (token: string) (conn: PostgrestConnection): PostgrestConnection =
         let headers =
@@ -59,11 +59,11 @@ module Common =
     
     let internal parseColumns (columns: Columns): string =
         match columns with
-        | COLS cols ->
+        | Cols cols ->
             match cols.IsEmpty with
             | true -> "*"
             | _    -> cols |> joinQueryParams
-        | ALL      -> "*"
+        | _         -> "*"
         
     let internal parseOptionalQueryString (queryString: string option): string =
         match queryString with

@@ -39,7 +39,7 @@ let result =
     conn
     |> from "actors"
     // |> insert testData
-    |> select (COLS ["first_name"; "last_name" ; "films(title)"])
+    |> select (Cols"first_name"; "last_name" ; "films(title)"])
     // |> update testData
     // |> delete
     // |> select (COLS ["title"; "director:directors(id,last_name)"])
