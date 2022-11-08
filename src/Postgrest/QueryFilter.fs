@@ -49,7 +49,7 @@ module QueryFilter =
         | NOT f              -> "not." + buildFilterString f
         | OR  (f1, f2)       -> "or=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
         | AND (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
-        
+    
     let private concatQueryFilterString (queryFilterString: string option): string =
         match queryFilterString with
         | Some fs -> fs
@@ -86,11 +86,13 @@ module QueryFilter =
         { pfb with QueryFilterString = Some filterString }
         
     let in_ (filterIn: string * 'a list) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
-        let stringValues = (snd filterIn) |> List.map (fun item -> item.ToString())
+        let key, items = filterIn
+        let stringValues = items |> List.map (fun item -> item.ToString())
         let currentQueryFilterString = pfb.QueryFilterString |> concatQueryFilterString
         
-        let filterString = $"{currentQueryFilterString}&{fst filterIn}=in." + "(" +
-                           (stringValues |> List.reduce(fun acc item -> $"{acc},{item}")) + ")"
+        let filterString = $"{currentQueryFilterString}&{key}=in."
+                           + "(" + (stringValues |> joinQueryParams) + ")"
+                           
         { pfb with QueryFilterString = Some filterString }
     
     let order (orderBy: (string * OrderType option * OrderNull option) list)
@@ -99,7 +101,7 @@ module QueryFilter =
         let orderByString =
             match orderByItems.IsEmpty with
             | true -> ""
-            | _    -> "&order=" + (orderByItems |> List.reduce(fun acc item -> $"{acc},{item}"))
+            | _    -> "&order=" + (orderByItems |> joinQueryParams)
         
         { pfb with QueryOrderString  = Some orderByString }
         

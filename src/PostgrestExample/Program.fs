@@ -37,9 +37,9 @@ let testData =
 
 let result =
     conn
-    |> from "test"
+    |> from "actors"
     // |> insert testData
-    |> select ALL
+    |> select (COLS ["first_name"; "last_name" ; "films(title)"])
     // |> update testData
     // |> delete
     // |> select (COLS ["title"; "director:directors(id,last_name)"])
@@ -49,7 +49,8 @@ let result =
     // |> filter (EQ ("id", Int 6))
     // |> one
     |> execute
-    |> parseResponse<Test list>
+    |> getResponseBody
+    // |> parseResponse<Test list>
 
 printfn $"{result}"
 

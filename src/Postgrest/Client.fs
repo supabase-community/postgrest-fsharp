@@ -54,7 +54,7 @@ module Client =
                 let client = new HttpClient()
                 
                 let headers = pfb.Query.Connection.Headers
-                client |> addHeaders (Map.toList headers)
+                client |> addRequestHeaders (Map.toList headers)
                 
                 let! response =
                     let query = pfb.Query
@@ -80,7 +80,7 @@ module Client =
                 let client = new HttpClient()
                 
                 let headers = pfb.Query.Connection.Headers
-                client |> addHeaders (Map.toList headers)
+                client |> addRequestHeaders (Map.toList headers)
                 
                 let! response =
                     let query = pfb.Query
@@ -100,7 +100,7 @@ module Client =
                 let client = new HttpClient()
                 
                 let headers = pfb.Query.Connection.Headers
-                client |> addHeaders (Map.toList headers)
+                client |> addRequestHeaders (Map.toList headers)
                 
                 let! response =
                     let query = pfb.Query
@@ -133,7 +133,7 @@ module Client =
                 let client = new HttpClient()
                 
                 let headers = pb.Query.Connection.Headers
-                client |> addHeaders (Map.toList headers)
+                client |> addRequestHeaders (Map.toList headers)
                 
                 let! response =
                     let query = pb.Query
