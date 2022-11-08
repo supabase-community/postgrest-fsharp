@@ -8,6 +8,11 @@ src/PostgrestExample/bin
 src/PostgrestExample/obj
 src/PostgrestExample/.idea
 
+# Postgrest.Tests
+src/Postgrest.Tests/bin
+src/Postgrest.Tests/obj
+src/Postgrest.Tests/.idea
+
 # vscode
 .vscode
 

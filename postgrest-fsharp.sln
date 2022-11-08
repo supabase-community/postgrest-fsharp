@@ -9,6 +9,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Postgrest", "src\Postgrest\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PostgrestExample", "src\PostgrestExample\PostgrestExample.fsproj", "{3216D3DD-AEBC-4E78-9E98-99B180870EE0}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Postgrest.Tests", "src\Postgrest.Tests\Postgrest.Tests.fsproj", "{E1D44F95-099C-48F0-9518-2D81B92DE18C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{3216D3DD-AEBC-4E78-9E98-99B180870EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3216D3DD-AEBC-4E78-9E98-99B180870EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3216D3DD-AEBC-4E78-9E98-99B180870EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1D44F95-099C-48F0-9518-2D81B92DE18C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1D44F95-099C-48F0-9518-2D81B92DE18C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1D44F95-099C-48F0-9518-2D81B92DE18C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1D44F95-099C-48F0-9518-2D81B92DE18C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{394C2272-4CE9-4E7E-A2A6-101B75608AC4} = {EF3978E3-4EF3-4B14-8DF3-83265F2F99F9}
 		{3216D3DD-AEBC-4E78-9E98-99B180870EE0} = {EF3978E3-4EF3-4B14-8DF3-83265F2F99F9}
+		{E1D44F95-099C-48F0-9518-2D81B92DE18C} = {EF3978E3-4EF3-4B14-8DF3-83265F2F99F9}
 	EndGlobalSection
 EndGlobal
