@@ -21,6 +21,8 @@ module Client =
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
+          QueryLikeString   = None
+          QueryFtsString    = None
           Body              = None
           RequestType       = Select }
         
@@ -30,6 +32,8 @@ module Client =
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
+          QueryLikeString   = None
+          QueryFtsString    = None
           Body              = None
           RequestType       = Delete }
         
@@ -41,6 +45,8 @@ module Client =
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
+          QueryLikeString   = None
+          QueryFtsString    = None
           Body              = Some body
           RequestType       = Update }
         
@@ -65,10 +71,13 @@ module Client =
                     let queryOrderString = pfb.QueryOrderString |> parseOptionalQueryString
                     let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
                     let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
+                    let queryLikeString = pfb.QueryLikeString |> parseOptionalQueryString
+                    let queryFtsString = pfb.QueryFtsString |> parseOptionalQueryString
                         
                     let url =
                         query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
-                        + queryOrderString + queryLimitString + queryOffsetString
+                        + queryOrderString + queryLimitString + queryOffsetString + queryLikeString
+                        + queryFtsString
                     
                     printfn $"{url}"
                     client.GetAsync(url)

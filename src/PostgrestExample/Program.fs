@@ -37,9 +37,12 @@ let testData =
 
 let result =
     conn
-    |> from "actors"
-    // |> insert testData
-    |> select (Cols"first_name"; "last_name" ; "films(title)"])
+    |> from "test"
+    |> select (All)
+    |> order [("id", Some Descending, None)]
+    // |> fts ("name", FtsNot (Fts (["Return"], None)))
+    // |> like ("name", "%Anakin%")
+    // |> select (Cols ["first_name"; "last_name" ; "films(title)"])
     // |> update testData
     // |> delete
     // |> select (COLS ["title"; "director:directors(id,last_name)"])
@@ -51,6 +54,8 @@ let result =
     |> execute
     |> getResponseBody
     // |> parseResponse<Test list>
+   
+    
 
 printfn $"{result}"
 

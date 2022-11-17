@@ -24,6 +24,8 @@ module Common =
         QueryOrderString : string option
         QueryLimitString : string option
         QueryOffsetString: string option
+        QueryLikeString  : string option
+        QueryFtsString   : string option
         Body             : RequestBody option
         RequestType      : FilterRequestType   
     }
@@ -36,6 +38,8 @@ module Common =
     type Columns =
         | All
         | Cols of string list
+        
+    type Column = string
     
     let withAuth (token: string) (conn: PostgrestConnection): PostgrestConnection =
         let headers =
@@ -55,7 +59,7 @@ module Common =
         |> List.iter (fun (key, value) -> client |> addRequestHeader key value)
     
     let internal joinQueryParams (queryParams: string list): string =
-        (queryParams |> List.reduce(fun acc item -> $"{acc},{item}"))
+        queryParams |> List.reduce(fun acc item -> $"{acc},{item}")
     
     let internal parseColumns (columns: Columns): string =
         match columns with
