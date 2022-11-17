@@ -12,18 +12,28 @@ module QueryFilter =
         | Bool   of bool
     
     type Filter =
-        | OpEqual            of  string * FilterValue
-        | OpGreaterThan      of  string * FilterValue
-        | OpGreaterThanEqual of  string * FilterValue
-        | OpLessThan         of  string * FilterValue
-        | OpLessThanEqual    of  string * FilterValue
-        | OpNotEqual         of  string * FilterValue
+        | OpEqual            of  Column * FilterValue
+        | OpGreaterThan      of  Column * FilterValue
+        | OpGreaterThanEqual of  Column * FilterValue
+        | OpLessThan         of  Column * FilterValue
+        | OpLessThanEqual    of  Column * FilterValue
+        | OpNotEqual         of  Column * FilterValue
         | OpNot              of  Filter
         | OpOr               of  Filter * Filter
         | OpAnd              of  Filter * Filter
         
+        
+    type IsFilterValue =
+        | IsNull
+        | IsTrue
+        | IsFalse
+        | IsUnknown
+        
+    // type IsFilter = IsFilter of Column * IsFilterValue
+        
     type Pattern = string
     type LikeFilter = Column * Pattern
+    type ILikeFilter = LikeFilter
         
     type OrderType =
         | Ascending
@@ -107,10 +117,28 @@ module QueryFilter =
                            
         { pfb with QueryFilterString = Some filterString }
     
+    let getIsFilterValue (isFilter: IsFilterValue): string =
+        match isFilter with
+        | IsNull    -> "null"
+        | IsTrue    -> "true"
+        | IsFalse   -> "false"
+        | IsUnknown -> "unknown"
+        
+    let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+        let column, filter = isFilter
+        let isFilterValueString = filter |> getIsFilterValue
+        
+        { pfb with QueryIsString = Some $"&{column}=is.{isFilterValueString}" }
+    
     let like (likeFilter: LikeFilter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let column, pattern = likeFilter
         
         { pfb with QueryLikeString = Some $"&{column}=like.{pattern}" }
+        
+    let ilike (iLikeFilter: ILikeFilter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+        let column, pattern = iLikeFilter
+        
+        { pfb with QueryILikeString = Some $"&{column}=ilike.{pattern}" }
     
     let order (orderBy: (Column * OrderType option * OrderNull option) list)
               (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =

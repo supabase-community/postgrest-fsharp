@@ -18,10 +18,12 @@ module Client =
         let queryString = parseColumns columns
         { Query             = { query with QueryString = $"?select={queryString}" }
           QueryFilterString = None
+          QueryIsString     = None
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
           QueryLikeString   = None
+          QueryILikeString  = None
           QueryFtsString    = None
           Body              = None
           RequestType       = Select }
@@ -29,10 +31,12 @@ module Client =
     let delete (query: Query): PostgrestFilterBuilder =
         { Query             = { query with QueryString = "?delete" }
           QueryFilterString = None
+          QueryIsString     = None
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
           QueryLikeString   = None
+          QueryILikeString  = None
           QueryFtsString    = None
           Body              = None
           RequestType       = Delete }
@@ -42,10 +46,12 @@ module Client =
         
         { Query             = { query with QueryString = "?update" }
           QueryFilterString = None
+          QueryIsString     = None
           QueryOrderString  = None
           QueryLimitString  = None
           QueryOffsetString = None
           QueryLikeString   = None
+          QueryILikeString  = None
           QueryFtsString    = None
           Body              = Some body
           RequestType       = Update }
@@ -72,12 +78,14 @@ module Client =
                     let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
                     let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
                     let queryLikeString = pfb.QueryLikeString |> parseOptionalQueryString
+                    let queryILikeString = pfb.QueryILikeString |> parseOptionalQueryString
                     let queryFtsString = pfb.QueryFtsString |> parseOptionalQueryString
+                    let queryIsString = pfb.QueryIsString |> parseOptionalQueryString
                         
                     let url =
                         query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
                         + queryOrderString + queryLimitString + queryOffsetString + queryLikeString
-                        + queryFtsString
+                        + queryILikeString + queryFtsString + queryIsString
                     
                     printfn $"{url}"
                     client.GetAsync(url)

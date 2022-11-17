@@ -39,7 +39,8 @@ let result =
     conn
     |> from "test"
     |> select (All)
-    |> order [("id", Some Descending, None)]
+    |> is ("id", IsNull)
+    // |> order [("id", Some Descending, None)]
     // |> fts ("name", FtsNot (Fts (["Return"], None)))
     // |> like ("name", "%Anakin%")
     // |> select (Cols ["first_name"; "last_name" ; "films(title)"])
