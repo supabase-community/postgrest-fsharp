@@ -1,8 +1,7 @@
 namespace Postgrest
 
 [<AutoOpen>]
-module Filter =
-    
+module FilterHelper =
     type FilterValue =
         | String of string
         | Int    of int
@@ -40,3 +39,8 @@ module Filter =
         | OpNot              f              -> "not."  + buildFilterString f
         | OpOr               (f1, f2)       -> "or=("  + buildFilterString f1 + "," + buildFilterString f2 + ")"
         | OpAnd              (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
+        
+    let internal getQueryFilterStringValue (queryFilterString: string option): string =
+        match queryFilterString with
+        | Some fs -> fs
+        | _       -> ""

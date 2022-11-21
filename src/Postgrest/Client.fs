@@ -18,6 +18,7 @@ module Client =
         let queryString = parseColumns columns
         { Query             = { query with QueryString = $"?select={queryString}" }
           QueryFilterString = None
+          QueryInString     = None
           QueryIsString     = None
           QueryOrderString  = None
           QueryLimitString  = None
@@ -31,6 +32,7 @@ module Client =
     let delete (query: Query): PostgrestFilterBuilder =
         { Query             = { query with QueryString = "?delete" }
           QueryFilterString = None
+          QueryInString     = None
           QueryIsString     = None
           QueryOrderString  = None
           QueryLimitString  = None
@@ -46,6 +48,7 @@ module Client =
         
         { Query             = { query with QueryString = "?update" }
           QueryFilterString = None
+          QueryInString     = None
           QueryIsString     = None
           QueryOrderString  = None
           QueryLimitString  = None
@@ -74,6 +77,7 @@ module Client =
                     let query = pfb.Query
                     
                     let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
+                    let queryInString = pfb.QueryInString |> parseOptionalQueryString
                     let queryOrderString = pfb.QueryOrderString |> parseOptionalQueryString
                     let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
                     let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
@@ -84,8 +88,8 @@ module Client =
                         
                     let url =
                         query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
-                        + queryOrderString + queryLimitString + queryOffsetString + queryLikeString
-                        + queryILikeString + queryFtsString + queryIsString
+                        + queryInString + queryOrderString + queryLimitString + queryOffsetString
+                        + queryLikeString + queryILikeString + queryFtsString + queryIsString
                     
                     printfn $"{url}"
                     client.GetAsync(url)

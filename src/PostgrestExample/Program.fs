@@ -38,8 +38,11 @@ let testData =
 let result =
     conn
     |> from "test"
-    |> select (All)
-    |> is ("id", IsNull)
+    |> select All
+    // |> in' ("name", ["Return of Jedi"; "Anakin"])
+    |> filter (OpEqual ("filled", Bool false))
+    
+    // |> is ("id", IsNull)
     // |> order [("id", Some Descending, None)]
     // |> fts ("name", FtsNot (Fts (["Return"], None)))
     // |> like ("name", "%Anakin%")

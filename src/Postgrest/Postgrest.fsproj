@@ -8,7 +8,9 @@
   <ItemGroup>
     <Compile Include="Connection.fs" />
     <Compile Include="Common.fs" />
-    <Compile Include="QueryFilter.fs" />
+    <Compile Include="FilterHelper.fs" />
+    <Compile Include="OrderByHelper.fs" />
+    <Compile Include="PostgrestFilterBuilder.fs" />
     <Compile Include="Client.fs" />
   </ItemGroup>
   

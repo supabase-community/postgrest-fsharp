@@ -17,20 +17,6 @@ module Common =
         | Update
         
     type RequestBody = string
-    
-    type PostgrestFilterBuilder = {
-        Query            : Query
-        QueryFilterString: string option
-        QueryIsString    : string option
-        QueryOrderString : string option
-        QueryLimitString : string option
-        QueryOffsetString: string option
-        QueryLikeString  : string option
-        QueryILikeString : string option
-        QueryFtsString   : string option
-        Body             : RequestBody option
-        RequestType      : FilterRequestType   
-    }
   
     type PostgrestBuilder = {
         Query: Query

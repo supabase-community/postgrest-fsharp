@@ -3,46 +3,32 @@ namespace Postgrest
 open Postgrest.Common
 
 [<AutoOpen>]
-module QueryFilter =
-    type FilterValue =
-        | String of string
-        | Int    of int
-        | Double of double
-        | Float  of float
-        | Bool   of bool
+module PostgrestFilterBuilder =
+    type PostgrestFilterBuilder = {
+        Query            : Query
+        QueryFilterString: string option
+        QueryInString    : string option
+        QueryIsString    : string option
+        QueryOrderString : string option
+        QueryLimitString : string option
+        QueryOffsetString: string option
+        QueryLikeString  : string option
+        QueryILikeString : string option
+        QueryFtsString   : string option
+        Body             : RequestBody option
+        RequestType      : FilterRequestType   
+    }
     
-    type Filter =
-        | OpEqual            of  Column * FilterValue
-        | OpGreaterThan      of  Column * FilterValue
-        | OpGreaterThanEqual of  Column * FilterValue
-        | OpLessThan         of  Column * FilterValue
-        | OpLessThanEqual    of  Column * FilterValue
-        | OpNotEqual         of  Column * FilterValue
-        | OpNot              of  Filter
-        | OpOr               of  Filter * Filter
-        | OpAnd              of  Filter * Filter
-        
-        
     type IsFilterValue =
         | IsNull
         | IsTrue
         | IsFalse
         | IsUnknown
         
-    // type IsFilter = IsFilter of Column * IsFilterValue
-        
     type Pattern = string
     type LikeFilter = Column * Pattern
     type ILikeFilter = LikeFilter
-        
-    type OrderType =
-        | Ascending
-        | Descending
-        
-    type OrderNull =
-        | NullFirst
-        | NullLast
-     
+    
     type FtsQuery = string
     type Language = string
     type FullTextSearch =
@@ -51,71 +37,24 @@ module QueryFilter =
         | Phfts of FtsQuery list * Language option
         | Wfts  of FtsQuery list * Language option
         | FtsNot of FullTextSearch
-        
-    let private parseFilterValue (filterValue: FilterValue): string =
-        match filterValue with
-        | String s -> s
-        | Int    i -> i.ToString()
-        | Double d -> d.ToString()
-        | Float  f -> f.ToString()
-        | Bool   b -> b.ToString().ToLower()
     
-    let rec private buildFilterString (filter: Filter): string =
-        match filter with
-        | OpEqual            (field, value) -> $"{field}=eq."  + parseFilterValue value
-        | OpGreaterThan      (field, value) -> $"{field}=gt."  + parseFilterValue value
-        | OpGreaterThanEqual (field, value) -> $"{field}=gte." + parseFilterValue value
-        | OpLessThan         (field, value) -> $"{field}=lt."  + parseFilterValue value
-        | OpLessThanEqual    (field, value) -> $"{field}=lte." + parseFilterValue value
-        | OpNotEqual         (field, value) -> $"{field}=neq." + parseFilterValue value
-        | OpNot              f              -> "not."  + buildFilterString f
-        | OpOr               (f1, f2)       -> "or=("  + buildFilterString f1 + "," + buildFilterString f2 + ")"
-        | OpAnd              (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
-    
-    let private getQueryFilterStringValue (queryFilterString: string option): string =
-        match queryFilterString with
-        | Some fs -> fs
-        | _       -> ""
-    
-    let private first (a, _, _) = a
-    let private middle (_, b, _) = b
-    let private third (_, _, c) = c 
-    let private getOrderByString (orderBy: string * OrderType option * OrderNull option): string =
-        let item = orderBy |> first
-        
-        let orderType =
-           match orderBy |> middle with
-           | Some s ->
-                match s with
-                | Ascending  -> ".asc"
-                | Descending -> ".desc"
-           | None   -> ""
-           
-        let orderNull =
-            match orderBy |> third with
-            | Some s ->
-                match s with
-                | NullFirst -> ".nullsfirst"
-                | NullLast  -> ".nullslast"
-            | None   -> ""
-            
-        $"{item}{orderType}{orderNull}"
-    
-    let filter (filter: Filter) (pfb: PostgrestFilter): PostgrestFilter =
+    let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let currentQueryFilterString = pfb.QueryFilterString |> getQueryFilterStringValue
         let filterString = $"{currentQueryFilterString}&" + (filter |> buildFilterString)
         
         { pfb with QueryFilterString = Some filterString }
         
-    let in_ (filterIn: Column * 'a list) (pfb: PostgrestFilter): PostgrestFilter =
+    let in' (filterIn: Column * 'a list) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let key, items = filterIn
-        let stringValues = items |> List.map (fun item -> item.ToString())
-        let currentQueryFilterString = pfb.QueryFilterString |> getQueryFilterStringValue
         
-        let filterString = $"{currentQueryFilterString}&{key}=in."
-                           + "(" + (stringValues |> joinQueryParams) + ")"
-                           
-        { pfb with QueryFilterString = Some filterString }
+        match items.IsEmpty with
+        | false ->
+            let stringValues = items |> List.map (fun item -> item.ToString())
+            let inString = $"&{key}=in." + "(" + (stringValues |> joinQueryParams) + ")"
+                               
+            { pfb with QueryInString = Some inString }
+        | true ->
+            pfb
     
     let getIsFilterValue (isFilter: IsFilterValue): string =
         match isFilter with
@@ -124,24 +63,24 @@ module QueryFilter =
         | IsFalse   -> "false"
         | IsUnknown -> "unknown"
         
-    let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilter): PostgrestFilter =
+    let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let column, filter = isFilter
         let isFilterValueString = filter |> getIsFilterValue
         
         { pfb with QueryIsString = Some $"&{column}=is.{isFilterValueString}" }
     
-    let like (likeFilter: LikeFilter) (pfb: PostgrestFilter): PostgrestFilter =
+    let like (likeFilter: LikeFilter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let column, pattern = likeFilter
         
         { pfb with QueryLikeString = Some $"&{column}=like.{pattern}" }
         
-    let ilike (iLikeFilter: ILikeFilter) (pfb: PostgrestFilter): PostgrestFilter =
+    let ilike (iLikeFilter: ILikeFilter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let column, pattern = iLikeFilter
         
         { pfb with QueryILikeString = Some $"&{column}=ilike.{pattern}" }
     
     let order (orderBy: (Column * OrderType option * OrderNull option) list)
-              (pfb: PostgrestFilter): PostgrestFilter =
+              (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let orderByItems = orderBy |> List.map getOrderByString
         let orderByString =
             match orderByItems.IsEmpty with
@@ -150,10 +89,10 @@ module QueryFilter =
         
         { pfb with QueryOrderString  = Some orderByString }
         
-    let limit (items: int) (pfb: PostgrestFilter): PostgrestFilter =
+    let limit (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         { pfb with QueryLimitString = Some $"&limit={items}" }
         
-    let offset (items: int) (pfb: PostgrestFilter): PostgrestFilter =
+    let offset (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         { pfb with QueryOffsetString = Some $"&offset={items}" }
     
     let internal joinFtsParams (ftsParams: string list): string =
@@ -172,13 +111,13 @@ module QueryFilter =
             | Wfts   (query, config) -> "wfts."  + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
             | FtsNot fts1            -> "not."   + buildFtsString fts1
         
-    let fts (ftsParam: Column * FullTextSearch) (pfb: PostgrestFilter): PostgrestFilter =
+    let fts (ftsParam: Column * FullTextSearch) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let parsedParam = snd ftsParam |> buildFtsString
         let column = fst ftsParam
         
         { pfb with QueryFtsString = Some ("&" + column + "=" + parsedParam) }
         
-    let one (pfb: PostgrestFilter): PostgrestFilter =
+    let one (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let updatedHeaders =
             match pfb.Query.Connection.Headers.TryFind "Accept" with
             | Some header ->
