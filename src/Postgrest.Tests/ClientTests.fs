@@ -1,4 +1,4 @@
-module Tests
+module ClientTests
 
 open Xunit
 open FsUnit.Xunit

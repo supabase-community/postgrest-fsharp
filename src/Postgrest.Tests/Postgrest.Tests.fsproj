@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Tests.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="ClientTests.fs" />
+    <Compile Include="PostgrestFilterBuilderTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

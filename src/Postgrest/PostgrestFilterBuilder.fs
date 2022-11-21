@@ -58,7 +58,7 @@ module QueryFilter =
         | Int    i -> i.ToString()
         | Double d -> d.ToString()
         | Float  f -> f.ToString()
-        | Bool   b -> b.ToString()
+        | Bool   b -> b.ToString().ToLower()
     
     let rec private buildFilterString (filter: Filter): string =
         match filter with
@@ -101,13 +101,13 @@ module QueryFilter =
             
         $"{item}{orderType}{orderNull}"
     
-    let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let filter (filter: Filter) (pfb: PostgrestFilter): PostgrestFilter =
         let currentQueryFilterString = pfb.QueryFilterString |> getQueryFilterStringValue
         let filterString = $"{currentQueryFilterString}&" + (filter |> buildFilterString)
         
         { pfb with QueryFilterString = Some filterString }
         
-    let in_ (filterIn: Column * 'a list) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let in_ (filterIn: Column * 'a list) (pfb: PostgrestFilter): PostgrestFilter =
         let key, items = filterIn
         let stringValues = items |> List.map (fun item -> item.ToString())
         let currentQueryFilterString = pfb.QueryFilterString |> getQueryFilterStringValue
@@ -124,24 +124,24 @@ module QueryFilter =
         | IsFalse   -> "false"
         | IsUnknown -> "unknown"
         
-    let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilter): PostgrestFilter =
         let column, filter = isFilter
         let isFilterValueString = filter |> getIsFilterValue
         
         { pfb with QueryIsString = Some $"&{column}=is.{isFilterValueString}" }
     
-    let like (likeFilter: LikeFilter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let like (likeFilter: LikeFilter) (pfb: PostgrestFilter): PostgrestFilter =
         let column, pattern = likeFilter
         
         { pfb with QueryLikeString = Some $"&{column}=like.{pattern}" }
         
-    let ilike (iLikeFilter: ILikeFilter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let ilike (iLikeFilter: ILikeFilter) (pfb: PostgrestFilter): PostgrestFilter =
         let column, pattern = iLikeFilter
         
         { pfb with QueryILikeString = Some $"&{column}=ilike.{pattern}" }
     
     let order (orderBy: (Column * OrderType option * OrderNull option) list)
-              (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+              (pfb: PostgrestFilter): PostgrestFilter =
         let orderByItems = orderBy |> List.map getOrderByString
         let orderByString =
             match orderByItems.IsEmpty with
@@ -150,10 +150,10 @@ module QueryFilter =
         
         { pfb with QueryOrderString  = Some orderByString }
         
-    let limit (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let limit (items: int) (pfb: PostgrestFilter): PostgrestFilter =
         { pfb with QueryLimitString = Some $"&limit={items}" }
         
-    let offset (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let offset (items: int) (pfb: PostgrestFilter): PostgrestFilter =
         { pfb with QueryOffsetString = Some $"&offset={items}" }
     
     let internal joinFtsParams (ftsParams: string list): string =
@@ -172,13 +172,13 @@ module QueryFilter =
             | Wfts   (query, config) -> "wfts."  + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
             | FtsNot fts1            -> "not."   + buildFtsString fts1
         
-    let fts (ftsParam: Column * FullTextSearch) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let fts (ftsParam: Column * FullTextSearch) (pfb: PostgrestFilter): PostgrestFilter =
         let parsedParam = snd ftsParam |> buildFtsString
         let column = fst ftsParam
         
         { pfb with QueryFtsString = Some ("&" + column + "=" + parsedParam) }
         
-    let one (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
+    let one (pfb: PostgrestFilter): PostgrestFilter =
         let updatedHeaders =
             match pfb.Query.Connection.Headers.TryFind "Accept" with
             | Some header ->
