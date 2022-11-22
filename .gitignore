@@ -2,19 +2,19 @@
 src/Postgrest/bin
 src/Postgrest/obj
 src/Postgrest/.idea
-src/Postgrest/Folder.DotSettings.user
+src/Postgrest/*.DotSettings.user
 
 # PostgrestExmaple
 src/PostgrestExample/bin
 src/PostgrestExample/obj
 src/PostgrestExample/.idea
-src/PostgrestExample/Folder.DotSettings.user
+src/PostgrestExample/*.DotSettings.user
 
 # Postgrest.Tests
 src/Postgrest.Tests/bin
 src/Postgrest.Tests/obj
 src/Postgrest.Tests/.idea
-src/Postgrest.Tests/Folder.DotSettings.user
+src/Postgrest.Tests/*.DotSettings.user
 
 # vscode
 .vscode
@@ -28,3 +28,5 @@ src/Postgrest.Tests/Folder.DotSettings.user
 
 # MacOS
 .DS_Store
+
+*.DotSettings.user
