@@ -109,7 +109,19 @@ module Client =
                     let query = pfb.Query
                     
                     let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
-                    let url = query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                    let queryInString = pfb.QueryInString |> parseOptionalQueryString
+                    let queryOrderString = pfb.QueryOrderString |> parseOptionalQueryString
+                    let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
+                    let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
+                    let queryLikeString = pfb.QueryLikeString |> parseOptionalQueryString
+                    let queryILikeString = pfb.QueryILikeString |> parseOptionalQueryString
+                    let queryFtsString = pfb.QueryFtsString |> parseOptionalQueryString
+                    let queryIsString = pfb.QueryIsString |> parseOptionalQueryString
+                        
+                    let url =
+                        query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                        + queryInString + queryOrderString + queryLimitString + queryOffsetString
+                        + queryLikeString + queryILikeString + queryFtsString + queryIsString
                     
                     printfn $"{url}"
                     client.DeleteAsync(url)
@@ -129,7 +141,20 @@ module Client =
                     let query = pfb.Query
                     
                     let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
-                    let url = query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                    let queryInString = pfb.QueryInString |> parseOptionalQueryString
+                    let queryOrderString = pfb.QueryOrderString |> parseOptionalQueryString
+                    let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
+                    let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
+                    let queryLikeString = pfb.QueryLikeString |> parseOptionalQueryString
+                    let queryILikeString = pfb.QueryILikeString |> parseOptionalQueryString
+                    let queryFtsString = pfb.QueryFtsString |> parseOptionalQueryString
+                    let queryIsString = pfb.QueryIsString |> parseOptionalQueryString
+                        
+                    let url =
+                        query.Connection.Url + "/" + query.Table + query.QueryString + queryFilterString
+                        + queryInString + queryOrderString + queryLimitString + queryOffsetString
+                        + queryLikeString + queryILikeString + queryFtsString + queryIsString
+                        
                     let contentBody =
                         match pfb.Body with
                         | Some body -> body
