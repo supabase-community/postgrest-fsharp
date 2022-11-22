@@ -25,3 +25,6 @@ src/Postgrest.Tests/Folder.DotSettings.user
 # .ionide
 .ionide
 .fake
+
+# MacOS
+.DS_Store

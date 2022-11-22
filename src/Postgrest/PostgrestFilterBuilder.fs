@@ -18,25 +18,10 @@ module PostgrestFilterBuilder =
         Body             : RequestBody option
         RequestType      : FilterRequestType   
     }
-    
-    type IsFilterValue =
-        | IsNull
-        | IsTrue
-        | IsFalse
-        | IsUnknown
         
     type Pattern = string
     type LikeFilter = Column * Pattern
     type ILikeFilter = LikeFilter
-    
-    type FtsQuery = string
-    type Language = string
-    type FullTextSearch =
-        | Fts   of FtsQuery list * Language option
-        | Plfts of FtsQuery list * Language option
-        | Phfts of FtsQuery list * Language option
-        | Wfts  of FtsQuery list * Language option
-        | FtsNot of FullTextSearch
     
     let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let currentQueryFilterString = pfb.QueryFilterString |> getQueryFilterStringValue
@@ -55,13 +40,6 @@ module PostgrestFilterBuilder =
             { pfb with QueryInString = Some inString }
         | true ->
             pfb
-    
-    let getIsFilterValue (isFilter: IsFilterValue): string =
-        match isFilter with
-        | IsNull    -> "null"
-        | IsTrue    -> "true"
-        | IsFalse   -> "false"
-        | IsUnknown -> "unknown"
         
     let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let column, filter = isFilter
@@ -94,22 +72,6 @@ module PostgrestFilterBuilder =
         
     let offset (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         { pfb with QueryOffsetString = Some $"&offset={items}" }
-    
-    let internal joinFtsParams (ftsParams: string list): string =
-        ftsParams |> List.reduce (fun acc item -> acc + "%20" + item)
-        
-    let parseFtsConfig (config: string option): string =
-        match config with
-        | Some v -> "(" + v + ")"
-        | _      -> ""
-        
-    let rec buildFtsString (ftsParam: FullTextSearch): string = 
-        match ftsParam with
-            | Fts    (query, config) -> "fts"    + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
-            | Plfts  (query, config) -> "plfts." + (config |> parseFtsConfig) + "." + (query |> joinFtsParams) 
-            | Phfts  (query, config) -> "phfts." + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
-            | Wfts   (query, config) -> "wfts."  + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
-            | FtsNot fts1            -> "not."   + buildFtsString fts1
         
     let fts (ftsParam: Column * FullTextSearch) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let parsedParam = snd ftsParam |> buildFtsString
