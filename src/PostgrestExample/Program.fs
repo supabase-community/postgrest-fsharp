@@ -40,8 +40,7 @@ let result =
     |> from "test"
     |> select All
     // |> in' ("name", ["Return of Jedi"; "Anakin"])
-    |> filter (OpEqual ("filled", Bool false))
-    
+    // |> filter (OpEqual ("filled", Bool false))
     // |> is ("id", IsNull)
     // |> order [("id", Some Descending, None)]
     // |> fts ("name", FtsNot (Fts (["Return"], None)))
@@ -56,8 +55,8 @@ let result =
     // |> filter (EQ ("id", Int 6))
     // |> one
     |> execute
-    |> getResponseBody
-    // |> parseResponse<Test list>
+    // |> getResponseBody
+    |> parseResponse<Test list>
    
     
 
