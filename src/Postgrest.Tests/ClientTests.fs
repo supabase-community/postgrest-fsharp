@@ -7,7 +7,7 @@ open Postgrest.Common
 open Postgrest.Connection
 
 let _url = "https://xxx.supabase.co/rest/v1"
-let _headers = (Map ["apiKey", "12345"])
+let _headers = Map [ "apiKey", "12345" ]
 
 let conn = postgrestConnection {
     url _url

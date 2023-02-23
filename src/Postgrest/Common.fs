@@ -1,6 +1,6 @@
 namespace Postgrest
 
-open System.Net.Http
+open System.Net.Http.Headers
 open Postgrest.Connection
 
 [<AutoOpen>]
@@ -29,22 +29,23 @@ module Common =
         
     type Column = string
     
-    let withAuth (token: string) (conn: PostgrestConnection): PostgrestConnection =
-        let headers =
-            match conn.Headers.ContainsKey "Authorization" with
-            | true ->
-                conn.Headers
-                    .Remove("Authorization")
-                    .Add("Authorization", $"Bearer {token}")
-            | _    -> conn.Headers.Add("Authorization", $"Bearer {token}")
-        { conn with Headers = headers}
     
-    let private addRequestHeader (key: string) (value: string) (client: HttpClient) =
-        client.DefaultRequestHeaders.Add(key, value)
+    // let withAuth (token: string) (connection: PostgrestConnection): PostgrestConnection =
+    //     let bearer = $"Bearer {token}"
+    //     match connection.Headers.ContainsKey "Authorization" with
+    //     | true  -> connection.Headers.Item "Authorization" <- bearer
+    //     | false -> connection.Headers.Add("Authorization", bearer)
+    //     
+    //     connection    
     
-    let internal addRequestHeaders (headers: (string * string) list) (client: HttpClient) =
-        headers
-        |> List.iter (fun (key, value) -> client |> addRequestHeader key value)
+    let internal addRequestHeaders (headers: Map<string, string>) (httpRequestHeaders: HttpRequestHeaders): unit =
+        headers |> Seq.iter (fun (KeyValue(k, v)) -> httpRequestHeaders.Add(k, v))
+    
+    // let private addRequestHeader (key: string) (value: string) (client: HttpClient): unit =
+    //     client.DefaultRequestHeaders.Add(key, value)
+    //
+    // let internal addRequestHeaders (headers: Dictionary<string, string>) (client: HttpClient): unit =
+    //     headers |> Seq.iter (fun (KeyValue(k, v)) -> client |> addRequestHeader k v)
     
     let internal joinQueryParams (queryParams: string list): string =
         queryParams |> List.reduce(fun acc item -> $"{acc},{item}")
