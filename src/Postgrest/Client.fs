@@ -132,7 +132,12 @@ module Client =
         let headers =
             match connection.Headers.ContainsKey "Authorization" with
             | true  ->
-                connection.Headers |> Seq.map (fun (KeyValue (k, v)) -> if k = "Authorization" then (k, formattedBearer) else (k, v)) |> Map
+                connection.Headers |>
+                Seq.map (fun (KeyValue (k, v)) ->
+                    match k with
+                    | "Authorization" -> (k, formattedBearer)
+                    | _               -> (k, v))
+                |> Map
             | false ->
                 connection.Headers |> Map.add "Authorization" formattedBearer
         { connection with Headers = headers }
