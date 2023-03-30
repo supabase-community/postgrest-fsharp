@@ -44,13 +44,16 @@ module PostgrestFilterBuilder =
     
     let order (orderBy: (Column * OrderType option * OrderNull option) list)
               (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
-        let orderByItems = orderBy |> List.map getOrderByString
-        let orderByString =
+        match orderBy.IsEmpty with
+        | true -> pfb
+        | _    ->
+            let orderByItems = orderBy |> List.map getOrderByString
+            
             match orderByItems.IsEmpty with
-            | true -> ""
-            | _    -> "&order=" + (orderByItems |> joinQueryParams)
-        
-        { pfb with QueryOrderString  = Some orderByString }
+            | true -> pfb
+            | _    ->
+                let orderByString = "&order=" + (orderByItems |> joinQueryParams)
+                { pfb with QueryOrderString  = Some orderByString }
         
     let limit (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         { pfb with QueryLimitString = Some $"&limit={items}" }
@@ -62,7 +65,9 @@ module PostgrestFilterBuilder =
         let parsedParam = snd ftsParam |> buildFtsString
         let column = fst ftsParam
         
-        { pfb with QueryFtsString = Some ("&" + column + "=" + parsedParam) }
+        match parsedParam.Length = 0 && column.Length = 0 with
+        | true -> pfb
+        | _    -> { pfb with QueryFtsString = Some $"&{column}={parsedParam}" }
         
     let one (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let updatedHeaders =
