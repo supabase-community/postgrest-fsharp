@@ -102,18 +102,23 @@ module FtsHelpers =
         | Wfts   of FtsQuery list * Language option
         | FtsNot of FullTextSearch
         
-    let internal joinFtsParams (ftsParams: string list): string =
-        ftsParams |> List.reduce (fun acc item -> acc + "%20" + item)
+    let private joinFtsParams (ftsParams: string list): string =
+        match ftsParams.IsEmpty with
+        | true -> ""
+        | _    -> ftsParams |> List.reduce (fun acc item -> acc + "%20" + item)
         
-    let parseFtsConfig (config: string option): string =
+    let private parseFtsConfig (config: string option): string =
         match config with
         | Some v -> "(" + v + ")"
         | _      -> ""
         
-    let rec buildFtsString (fts: FullTextSearch): string = 
+    let private buildFtsStringInner (prefix: string) (config: Language Option) (query: FtsQuery list): string =
+        $"{prefix}{parseFtsConfig config}.{joinFtsParams query}"
+    
+    let rec internal buildFtsString (fts: FullTextSearch): string = 
         match fts with
-            | Fts    (query, config) -> "fts"    + (parseFtsConfig config) + "." + (joinFtsParams query)
-            | Plfts  (query, config) -> "plfts." + (parseFtsConfig config) + "." + (joinFtsParams query) 
-            | Phfts  (query, config) -> "phfts." + (parseFtsConfig config) + "." + (joinFtsParams query)
-            | Wfts   (query, config) -> "wfts."  + (parseFtsConfig config) + "." + (joinFtsParams query)
-            | FtsNot ftsNot          -> "not."   + buildFtsString ftsNot
+            | Fts    (query, config) -> buildFtsStringInner "fts" config query
+            | Plfts  (query, config) -> buildFtsStringInner "plfts" config query 
+            | Phfts  (query, config) -> buildFtsStringInner "phfts" config query
+            | Wfts   (query, config) -> buildFtsStringInner "wfts" config query
+            | FtsNot ftsNot          -> $"not.{buildFtsString ftsNot}"

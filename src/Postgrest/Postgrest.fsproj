@@ -9,7 +9,7 @@
     <Compile Include="Connection.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Http.fs" />
-    <Compile Include="PostgrestFilterHelpers.fs" />
+    <Compile Include="PostgrestFilterHelper.fs" />
     <Compile Include="PostgrestFilterBuilder.fs" />
     <Compile Include="Client.fs" />
   </ItemGroup>
