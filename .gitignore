@@ -10,11 +10,11 @@ src/PostgrestExample/obj
 src/PostgrestExample/.idea
 src/PostgrestExample/*.DotSettings.user
 
-# Postgrest.Tests
-src/Postgrest.Tests/bin
-src/Postgrest.Tests/obj
-src/Postgrest.Tests/.idea
-src/Postgrest.Tests/*.DotSettings.user
+# PostgrestTests
+src/PostgrestTests/bin
+src/PostgrestTests/obj
+src/PostgrestTests/.idea
+src/PostgrestTests/*.DotSettings.user
 
 # vscode
 .vscode
