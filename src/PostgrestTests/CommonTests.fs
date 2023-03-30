@@ -46,20 +46,17 @@ module ParseColumnsTests =
         
 [<Collection("getUrlSuffixFromPostgresFilterBuilder")>]
 module GetUrlSuffixFromPostgresFilterBuilderTests =
-    let _url = "https://xxx.supabase.co/rest/v1"
-    let _headers = Map [ "apiKey", "12345" ]
-
-    let conn = postgrestConnection {
-        url _url
-        headers _headers
-    }
-    
     [<Fact>]
     let ``returns string with table name if none of PostgrestFilterBuilder is set`` () =
         // Arrange
-        let expectedResult = "?table-name=name"
+        let connection = postgrestConnection {
+            url "https://xxx.supabase.co/rest/v1"
+            headers  (Map [ "apiKey", "exampleApiKey" ])
+        }
+    
+        let expectedResult = "table?select=*"
         let pfb =
-            { Query = { Connection = conn ; Table = "?table-name=name" ; QueryString = "" }
+            { Query = { Connection = connection ; Table = "table" ; QueryString = "?select=*" }
               QueryFilterString = None
               QueryInString     = None
               QueryIsString     = None
@@ -81,9 +78,14 @@ module GetUrlSuffixFromPostgresFilterBuilderTests =
     [<Fact>]
     let ``returns string with table name and all of given PostgrestFilterBuilder params`` () =
         // Arrange
-        let expectedResult = "?table-name=name&filter=f&in=in&is=is&order=o&limit=l&offset=o&like=l&ilike=i&fts=f"
+        let connection = postgrestConnection {
+            url "https://xxx.supabase.co/rest/v1"
+            headers  (Map [ "apiKey", "exampleApiKey" ])
+        }
+         
+        let expectedResult = "table?select=*&filter=f&in=in&is=is&order=o&limit=l&offset=o&like=l&ilike=i&fts=f"
         let pfb =
-            { Query = { Connection = conn ; Table = "?table-name=name" ; QueryString = "" }
+            { Query = { Connection = connection ; Table = "table" ; QueryString = "?select=*" }
               QueryFilterString = Some "&filter=f"
               QueryInString     = Some "&in=in"
               QueryIsString     = Some "&is=is"
