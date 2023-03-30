@@ -29,28 +29,28 @@ module Common =
         
     type Column = string
     
-    
-    // let withAuth (token: string) (connection: PostgrestConnection): PostgrestConnection =
-    //     let bearer = $"Bearer {token}"
-    //     match connection.Headers.ContainsKey "Authorization" with
-    //     | true  -> connection.Headers.Item "Authorization" <- bearer
-    //     | false -> connection.Headers.Add("Authorization", bearer)
-    //     
-    //     connection    
+    type PostgrestFilterBuilder = {
+        Query            : Query
+        QueryFilterString: string option
+        QueryInString    : string option
+        QueryIsString    : string option
+        QueryOrderString : string option
+        QueryLimitString : string option
+        QueryOffsetString: string option
+        QueryLikeString  : string option
+        QueryILikeString : string option
+        QueryFtsString   : string option
+        Body             : RequestBody option
+        RequestType      : FilterRequestType   
+    }
     
     let internal addRequestHeaders (headers: Map<string, string>) (httpRequestHeaders: HttpRequestHeaders): unit =
         headers |> Seq.iter (fun (KeyValue(k, v)) -> httpRequestHeaders.Add(k, v))
     
-    // let private addRequestHeader (key: string) (value: string) (client: HttpClient): unit =
-    //     client.DefaultRequestHeaders.Add(key, value)
-    //
-    // let internal addRequestHeaders (headers: Dictionary<string, string>) (client: HttpClient): unit =
-    //     headers |> Seq.iter (fun (KeyValue(k, v)) -> client |> addRequestHeader k v)
-    
-    let internal joinQueryParams (queryParams: string list): string =
+    let inline joinQueryParams (queryParams: string list): string =
         queryParams |> List.reduce(fun acc item -> $"{acc},{item}")
     
-    let internal parseColumns (columns: Columns): string =
+    let inline parseColumns (columns: Columns): string =
         match columns with
         | Cols cols ->
             match cols.IsEmpty with
@@ -58,7 +58,24 @@ module Common =
             | _    -> cols |> joinQueryParams
         | _         -> "*"
         
-    let internal parseOptionalQueryString (queryString: string option): string =
-        match queryString with
-        | Some value -> value
-        | None       -> ""
+    let inline parseOptionalQueryString (queryString: string option): string = ("", queryString) ||> Option.defaultValue
+        
+    let inline getUrlSuffixFromPostgresFilterBuilder (pfb: PostgrestFilterBuilder): string =
+        let query = pfb.Query
+        
+        let queryFilterString = parseOptionalQueryString pfb.QueryFilterString
+        let queryInString     = parseOptionalQueryString pfb.QueryInString
+        let queryIsString     = parseOptionalQueryString pfb.QueryIsString
+        let queryOrderString  = parseOptionalQueryString pfb.QueryOrderString
+        let queryLimitString  = parseOptionalQueryString pfb.QueryLimitString
+        let queryOffsetString = parseOptionalQueryString pfb.QueryOffsetString
+        let queryLikeString   = parseOptionalQueryString pfb.QueryLikeString
+        let queryILikeString  = parseOptionalQueryString pfb.QueryILikeString
+        let queryFtsString    = parseOptionalQueryString pfb.QueryFtsString
+            
+        let urlSuffix =
+            query.Table + query.QueryString + queryFilterString
+            + queryInString + queryIsString + queryOrderString + queryLimitString
+            + queryOffsetString + queryLikeString + queryILikeString + queryFtsString 
+        
+        urlSuffix

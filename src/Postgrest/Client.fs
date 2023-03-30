@@ -65,26 +65,6 @@ module Client =
         
         { Query = { query with QueryString = "?insert" }
           Body  = body }  
-        
-    let private getUrlSuffixFromPostgresFilterBuilder (pfb: PostgrestFilterBuilder): string =
-        let query = pfb.Query
-        
-        let queryFilterString = pfb.QueryFilterString |> parseOptionalQueryString
-        let queryInString = pfb.QueryInString |> parseOptionalQueryString
-        let queryOrderString = pfb.QueryOrderString |> parseOptionalQueryString
-        let queryLimitString = pfb.QueryLimitString |> parseOptionalQueryString
-        let queryOffsetString = pfb.QueryOffsetString |> parseOptionalQueryString
-        let queryLikeString = pfb.QueryLikeString |> parseOptionalQueryString
-        let queryILikeString = pfb.QueryILikeString |> parseOptionalQueryString
-        let queryFtsString = pfb.QueryFtsString |> parseOptionalQueryString
-        let queryIsString = pfb.QueryIsString |> parseOptionalQueryString
-            
-        let urlSuffix =
-            query.Table + query.QueryString + queryFilterString
-            + queryInString + queryOrderString + queryLimitString + queryOffsetString
-            + queryLikeString + queryILikeString + queryFtsString + queryIsString
-        
-        urlSuffix
     
     let private executeSelect<'T> (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
@@ -94,7 +74,7 @@ module Client =
     let private executeDelete (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
             
-        pfb.Query.Connection |> Http.delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] ))
+        pfb.Query.Connection |> Http.delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) None
     
     let private executeUpdate (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
@@ -132,11 +112,11 @@ module Client =
         let headers =
             match connection.Headers.ContainsKey "Authorization" with
             | true  ->
-                connection.Headers |>
-                Seq.map (fun (KeyValue (k, v)) ->
-                    match k with
-                    | "Authorization" -> (k, formattedBearer)
-                    | _               -> (k, v))
+                connection.Headers
+                |> Seq.map (fun (KeyValue (k, v)) ->
+                        match k with
+                        | "Authorization" -> (k, formattedBearer)
+                        | _               -> (k, v))
                 |> Map
             | false ->
                 connection.Headers |> Map.add "Authorization" formattedBearer

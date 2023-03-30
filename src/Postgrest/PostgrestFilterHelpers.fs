@@ -40,11 +40,6 @@ module FilterHelpers =
         | OpOr               (f1, f2)       -> "or=("  + buildFilterString f1 + "," + buildFilterString f2 + ")"
         | OpAnd              (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
         
-    let internal getQueryFilterStringValue (queryFilterString: string option): string =
-        match queryFilterString with
-        | Some fs -> fs
-        | _       -> ""
-        
 [<AutoOpen>]
 module OrderByHelpers =
     type OrderType =
@@ -78,7 +73,8 @@ module OrderByHelpers =
                 | NullLast  -> ".nullslast"
             | None   -> ""
             
-        $"{item}{orderType}{orderNull}"
+        let orderByString = $"{item}{orderType}{orderNull}"
+        orderByString
         
 [<AutoOpen>]
 module IsFilterHelpers =
@@ -100,10 +96,10 @@ module FtsHelpers =
     type FtsQuery = string
     type Language = string
     type FullTextSearch =
-        | Fts   of FtsQuery list * Language option
-        | Plfts of FtsQuery list * Language option
-        | Phfts of FtsQuery list * Language option
-        | Wfts  of FtsQuery list * Language option
+        | Fts    of FtsQuery list * Language option
+        | Plfts  of FtsQuery list * Language option
+        | Phfts  of FtsQuery list * Language option
+        | Wfts   of FtsQuery list * Language option
         | FtsNot of FullTextSearch
         
     let internal joinFtsParams (ftsParams: string list): string =
@@ -114,10 +110,10 @@ module FtsHelpers =
         | Some v -> "(" + v + ")"
         | _      -> ""
         
-    let rec buildFtsString (ftsParam: FullTextSearch): string = 
-        match ftsParam with
-            | Fts    (query, config) -> "fts"    + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
-            | Plfts  (query, config) -> "plfts." + (config |> parseFtsConfig) + "." + (query |> joinFtsParams) 
-            | Phfts  (query, config) -> "phfts." + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
-            | Wfts   (query, config) -> "wfts."  + (config |> parseFtsConfig) + "." + (query |> joinFtsParams)
-            | FtsNot fts1            -> "not."   + buildFtsString fts1
+    let rec buildFtsString (fts: FullTextSearch): string = 
+        match fts with
+            | Fts    (query, config) -> "fts"    + (parseFtsConfig config) + "." + (joinFtsParams query)
+            | Plfts  (query, config) -> "plfts." + (parseFtsConfig config) + "." + (joinFtsParams query) 
+            | Phfts  (query, config) -> "phfts." + (parseFtsConfig config) + "." + (joinFtsParams query)
+            | Wfts   (query, config) -> "wfts."  + (parseFtsConfig config) + "." + (joinFtsParams query)
+            | FtsNot ftsNot          -> "not."   + buildFtsString ftsNot
