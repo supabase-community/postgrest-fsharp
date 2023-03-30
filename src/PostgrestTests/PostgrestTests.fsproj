@@ -5,11 +5,13 @@
 
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
+    <RootNamespace>Postgrest.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="ClientTests.fs" />
     <Compile Include="PostgrestFilterBuilderTests.fs" />
+    <Compile Include="CommonTests.fs" />
   </ItemGroup>
 
   <ItemGroup>
