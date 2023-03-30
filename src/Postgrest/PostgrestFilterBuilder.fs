@@ -4,27 +4,12 @@ open Postgrest.Common
 
 [<AutoOpen>]
 module PostgrestFilterBuilder =
-    type PostgrestFilterBuilder = {
-        Query            : Query
-        QueryFilterString: string option
-        QueryInString    : string option
-        QueryIsString    : string option
-        QueryOrderString : string option
-        QueryLimitString : string option
-        QueryOffsetString: string option
-        QueryLikeString  : string option
-        QueryILikeString : string option
-        QueryFtsString   : string option
-        Body             : RequestBody option
-        RequestType      : FilterRequestType   
-    }
-        
     type Pattern = string
     type LikeFilter = Column * Pattern
     type ILikeFilter = LikeFilter
     
     let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
-        let currentQueryFilterString = pfb.QueryFilterString |> getQueryFilterStringValue
+        let currentQueryFilterString = ("", pfb.QueryFilterString) ||> Option.defaultValue
         let filterString = $"{currentQueryFilterString}&" + (filter |> buildFilterString)
         
         { pfb with QueryFilterString = Some filterString }

@@ -63,9 +63,12 @@ module Http =
 
         connection |> executeHttpRequest headers requestMessage
         
-    let delete (urlSuffix: string) (headers: Map<string, string> option)
+    let delete (urlSuffix: string) (headers: Map<string, string> option) (content: HttpContent option)
                (connection: PostgrestConnection): Result<HttpResponseMessage, PostgrestError> =
         let requestMessage = getRequestMessage HttpMethod.Delete connection.Url urlSuffix
+        match content with
+        | Some c -> requestMessage.Content <- c
+        | _      -> ()
         
         connection |> executeHttpRequest headers requestMessage 
     
