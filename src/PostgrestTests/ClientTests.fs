@@ -91,7 +91,7 @@ module SelectTests =
         }
         
         let table = "table"
-        let columns = Cols []
+        let columns = Columns []
         
         // Act
         let pfb =
@@ -117,7 +117,7 @@ module SelectTests =
         let pfb =
             connection
             |> from table
-            |> select (Cols [usernameCol ; passwordCol]) 
+            |> select (Columns [usernameCol ; passwordCol]) 
          
         // Assert
         pfb.Query.QueryString |> should equal $"?select={usernameCol},{passwordCol}"
@@ -228,7 +228,7 @@ module ExecuteTests =
                   RequestType       = Select }
             
             // Act
-            let result = Client.execute<SelectResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<SelectResponse> pfb 
 
             // Assert
             match result with
@@ -276,7 +276,7 @@ module ExecuteTests =
                   RequestType       = Select }
             
             // Act
-            let result = Client.execute<SelectResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<SelectResponse> pfb 
 
             // Assert
             match result with
@@ -335,7 +335,7 @@ module ExecuteTests =
                   RequestType       = Delete }
             
             // Act
-            let result = Client.execute<DeleteResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<DeleteResponse> pfb 
 
             // Assert
             match result with
@@ -383,7 +383,7 @@ module ExecuteTests =
                   RequestType       = Delete }
             
             // Act
-            let result = Client.execute<DeleteResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<DeleteResponse> pfb 
 
             // Assert
             match result with
@@ -449,7 +449,7 @@ module ExecuteTests =
                   RequestType       = Update }
             
             // Act
-            let result = Client.execute<UpdateResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<UpdateResponse> pfb 
 
             // Assert
             match result with
@@ -504,7 +504,7 @@ module ExecuteTests =
                   RequestType       = Update }
             
             // Act
-            let result = Client.execute<UpdateResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<UpdateResponse> pfb 
 
             // Assert
             match result with
