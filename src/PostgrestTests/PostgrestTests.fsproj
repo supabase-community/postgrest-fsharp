@@ -13,6 +13,7 @@
     <Compile Include="ClientTests.fs" />
     <Compile Include="PostgrestFilterBuilderTests.fs" />
     <Compile Include="CommonTests.fs" />
+    <Compile Include="PostgrestFilterBuilderHelperTests.fs" />
   </ItemGroup>
 
   <ItemGroup>
