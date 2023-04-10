@@ -1,5 +1,51 @@
 namespace Postgrest
 
+open System.Net
+open System.Net.Http
+open System.Text
+open Postgrest.Http
+
+[<AutoOpen>]
+module PostgrestFilterBuilderHelper =
+    let inline getUrlSuffixFromPostgresFilterBuilder (pfb: PostgrestFilterBuilder): string =
+        let query = pfb.Query
+        
+        let queryFilterString = parseOptionalQueryString pfb.QueryFilterString
+        let queryInString     = parseOptionalQueryString pfb.QueryInString
+        let queryIsString     = parseOptionalQueryString pfb.QueryIsString
+        let queryOrderString  = parseOptionalQueryString pfb.QueryOrderString
+        let queryLimitString  = parseOptionalQueryString pfb.QueryLimitString
+        let queryOffsetString = parseOptionalQueryString pfb.QueryOffsetString
+        let queryLikeString   = parseOptionalQueryString pfb.QueryLikeString
+        let queryILikeString  = parseOptionalQueryString pfb.QueryILikeString
+        let queryFtsString    = parseOptionalQueryString pfb.QueryFtsString
+            
+        let urlSuffix =
+            query.Table + query.QueryString + queryFilterString
+            + queryInString + queryIsString + queryOrderString + queryLimitString
+            + queryOffsetString + queryLikeString + queryILikeString + queryFtsString 
+        
+        urlSuffix
+    
+    let inline executeSelect<'T> (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
+        let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
+        
+        pfb.Query.Connection |> get urlSuffix None
+        
+    let inline executeDelete (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
+        let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
+            
+        pfb.Query.Connection |> delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) None
+    
+    let inline executeUpdate (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
+        match pfb.Body with
+        | Some body ->
+            let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
+            let content = new StringContent(body, Encoding.UTF8, "application/json")
+            
+            pfb.Query.Connection |> patch urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) content
+        | _ -> Error {message = "Missing request body" ; statusCode = HttpStatusCode.BadRequest}
+
 [<AutoOpen>]
 module FilterHelpers =
     type FilterValue =

@@ -1,6 +1,8 @@
 namespace Postgrest
 
 open Postgrest.Common
+open Postgrest.Http
+ 
 
 [<AutoOpen>]
 module PostgrestFilterBuilder =
@@ -8,9 +10,18 @@ module PostgrestFilterBuilder =
     type LikeFilter = Column * Pattern
     type ILikeFilter = LikeFilter
     
+    let execute<'T> (pfb: PostgrestFilterBuilder): Result<'T, PostgrestError> = 
+        let response =
+            match pfb.RequestType with
+            | Select -> pfb |> executeSelect
+            | Delete -> pfb |> executeDelete
+            | Update -> pfb |> executeUpdate
+            
+        deserializeResponse<'T> response
+    
     let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let currentQueryFilterString = ("", pfb.QueryFilterString) ||> Option.defaultValue
-        let filterString = $"{currentQueryFilterString}&" + (filter |> buildFilterString)
+        let filterString = $"{currentQueryFilterString}&" + (buildFilterString filter)
         
         { pfb with QueryFilterString = Some filterString }
         
@@ -20,7 +31,7 @@ module PostgrestFilterBuilder =
         match items.IsEmpty with
         | false ->
             let stringValues = items |> List.map (fun item -> item.ToString())
-            let inString = $"&{key}=in." + "(" + (stringValues |> joinQueryParams) + ")"
+            let inString = $"&{key}=in." + "(" + (joinQueryParams stringValues) + ")"
                                
             { pfb with QueryInString = Some inString }
         | true ->
@@ -28,7 +39,7 @@ module PostgrestFilterBuilder =
         
     let is (isFilter: Column * IsFilterValue) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
         let column, filter = isFilter
-        let isFilterValueString = filter |> getIsFilterValue
+        let isFilterValueString = getIsFilterValue filter
         
         { pfb with QueryIsString = Some $"&{column}=is.{isFilterValueString}" }
     
@@ -52,7 +63,7 @@ module PostgrestFilterBuilder =
             match orderByItems.IsEmpty with
             | true -> pfb
             | _    ->
-                let orderByString = "&order=" + (orderByItems |> joinQueryParams)
+                let orderByString = "&order=" + (joinQueryParams orderByItems)
                 { pfb with QueryOrderString  = Some orderByString }
         
     let limit (items: int) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
