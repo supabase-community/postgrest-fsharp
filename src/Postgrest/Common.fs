@@ -45,7 +45,7 @@ module Common =
     let internal joinQueryParams (queryParams: string list): string =
         queryParams |> List.reduce(fun acc item -> $"{acc},{item}")
     
-    let internal parseColumns (columns: Columns): string =
+    let parseColumns (columns: Columns): string =
         match columns with
         | Columns cols ->
             match cols.IsEmpty with

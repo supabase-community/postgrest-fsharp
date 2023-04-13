@@ -27,17 +27,17 @@ module PostgrestFilterBuilderHelper =
         
         urlSuffix
     
-    let executeSelect<'T> (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
+    let internal executeSelect<'T> (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
         
         pfb.Query.Connection |> get urlSuffix None
         
-    let executeDelete (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
+    let internal executeDelete (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
             
         pfb.Query.Connection |> delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) None
     
-    let executeUpdate (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
+    let internal executeUpdate (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         match pfb.Body with
         | Some body ->
             let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
