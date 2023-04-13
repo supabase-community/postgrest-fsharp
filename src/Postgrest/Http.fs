@@ -10,7 +10,7 @@ open Postgrest.Common
 module Http =
     type PostgrestError = {
         message: string
-        statusCode: HttpStatusCode
+        statusCode: HttpStatusCode option
     }
     
     let private getResponseBody (responseMessage: HttpResponseMessage): string = 
@@ -19,11 +19,17 @@ module Http =
         |> Async.RunSynchronously
             
     let deserializeResponse<'T> (response: Result<HttpResponseMessage, PostgrestError>): Result<'T, PostgrestError> =        
-        match response with
-        | Ok r    ->
-            printfn $"{r.RequestMessage}"
-            Result.Ok (Json.deserialize<'T> (r |> getResponseBody))
-        | Error e -> Result.Error e
+        try
+            match response with
+            | Ok r    ->
+                printfn $"{r.RequestMessage}"
+                Result.Ok (Json.deserialize<'T> (r |> getResponseBody))
+            | Error e -> Result.Error e
+        with
+            | :? System.NullReferenceException as ex ->
+                Error { message = ex.Message ; statusCode = None }
+            | _ ->
+                Error { message = "Unexpected error" ; statusCode = None }
         
     let deserializeEmptyResponse (response: Result<HttpResponseMessage, PostgrestError>): Result<unit, PostgrestError> =
         match response with
@@ -49,10 +55,10 @@ module Http =
             | HttpStatusCode.OK -> Result.Ok result
             | statusCode        ->
                 Result.Error { message    = getResponseBody result
-                               statusCode = statusCode }
+                               statusCode = Some statusCode }
         with e ->
             Result.Error { message    = e.ToString()
-                           statusCode = HttpStatusCode.BadRequest }
+                           statusCode = None }
             
     let private getRequestMessage (httpMethod: HttpMethod) (url: string) (urlSuffix: string): HttpRequestMessage =
         new HttpRequestMessage(httpMethod, $"{url}/{urlSuffix}")
