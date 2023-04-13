@@ -1,6 +1,5 @@
 namespace Postgrest
 
-open System.Net
 open System.Net.Http
 open System.Text
 open Postgrest.Http
