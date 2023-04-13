@@ -17,5 +17,5 @@ A F# client library for Postgrest
   - [x] Filters
   - [x] Ordering
   - [x] Fulltext search
-- [] Unit testing
+- [x] Unit testing
 - [] Release on NuGet
