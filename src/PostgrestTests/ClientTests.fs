@@ -250,7 +250,7 @@ module ExecuteTests =
         [<Fact>]
         let ``execute with Select RequestType should return PostgrestError when API call is not successful`` () =
             // Arrange
-            let expectedError = { message = "Bad Request"; statusCode = HttpStatusCode.BadRequest }
+            let expectedError = { message = "Bad Request"; statusCode = Some HttpStatusCode.BadRequest }
             
             let mockHandler = mockHttpMessageHandlerFail expectedError
             let mockHttpClient = new HttpClient(mockHandler.Object)
@@ -357,7 +357,7 @@ module ExecuteTests =
         [<Fact>]
         let ``execute with Delete RequestType should return PostgrestError when API call is not successful`` () =
             // Arrange
-            let expectedError = { message = "Bad Request"; statusCode = HttpStatusCode.BadRequest }
+            let expectedError = { message = "Bad Request"; statusCode = Some HttpStatusCode.BadRequest }
             
             let mockHandler = mockHttpMessageHandlerFail expectedError
             let mockHttpClient = new HttpClient(mockHandler.Object)
@@ -472,7 +472,7 @@ module ExecuteTests =
         [<Fact>]
         let ``execute with Update RequestType should return PostgrestError when API call is not successful`` () =
             // Arrange
-            let expectedError = { message = "Bad Request"; statusCode = HttpStatusCode.BadRequest }
+            let expectedError = { message = "Bad Request"; statusCode = Some HttpStatusCode.BadRequest }
             
             let requestBody =
                 """{

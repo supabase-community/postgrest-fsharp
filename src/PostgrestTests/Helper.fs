@@ -37,7 +37,7 @@ module Helper =
         mockHandler.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(
-                new HttpResponseMessage(error.statusCode, Content = new StringContent(error.message, Encoding.UTF8, "application/json")))
+                new HttpResponseMessage(error.statusCode.Value, Content = new StringContent(error.message, Encoding.UTF8, "application/json")))
             .Verifiable()
         mockHandler
         
@@ -49,7 +49,7 @@ module Helper =
                 req.Content <- new StringContent(requestBody, Encoding.UTF8, "application/json")
             )
             .ReturnsAsync(
-                new HttpResponseMessage(error.statusCode, Content = new StringContent(error.message, Encoding.UTF8, "application/json")))
+                new HttpResponseMessage(error.statusCode.Value, Content = new StringContent(error.message, Encoding.UTF8, "application/json")))
             .Verifiable()
         mockHandler
 
