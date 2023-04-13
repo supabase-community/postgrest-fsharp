@@ -42,10 +42,10 @@ module Common =
     let internal addRequestHeaders (headers: Map<string, string>) (httpRequestHeaders: HttpRequestHeaders): unit =
         headers |> Seq.iter (fun (KeyValue(k, v)) -> httpRequestHeaders.Add(k, v))
     
-    let inline joinQueryParams (queryParams: string list): string =
+    let internal joinQueryParams (queryParams: string list): string =
         queryParams |> List.reduce(fun acc item -> $"{acc},{item}")
     
-    let inline parseColumns (columns: Columns): string =
+    let internal parseColumns (columns: Columns): string =
         match columns with
         | Columns cols ->
             match cols.IsEmpty with
@@ -53,4 +53,4 @@ module Common =
             | _    -> cols |> joinQueryParams
         | _         -> "*"
         
-    let inline parseOptionalQueryString (queryString: string option): string = ("", queryString) ||> Option.defaultValue
+    let internal parseOptionalQueryString (queryString: string option): string = ("", queryString) ||> Option.defaultValue
