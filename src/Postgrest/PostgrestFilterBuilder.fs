@@ -2,7 +2,6 @@ namespace Postgrest
 
 open Postgrest.Common
 open Postgrest.Http
- 
 
 [<AutoOpen>]
 module PostgrestFilterBuilder =
