@@ -1,4 +1,4 @@
-namespace Helper
+namespace Postgrest
 
 open System.Net
 open System.Net.Http

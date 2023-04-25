@@ -3,14 +3,11 @@ module ClientTests
 open System.Net
 open System.Net.Http
 open System.Threading
-open Helper
 open Moq
 open Moq.Protected
-open Postgrest
 open Xunit
 open FsUnit.Xunit
-open Postgrest.Connection
-open Postgrest.Http
+open Postgrest
 
 [<Fact>]
 let ``postgrestConnection should create connection with given url and headers`` () =

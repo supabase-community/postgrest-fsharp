@@ -1,9 +1,8 @@
 module PostgrestFilterBuilderHelperTests
 
-open Postgrest
-open Postgrest.Connection
 open FsUnit.Xunit
 open Xunit
+open Postgrest
 
 [<Collection("getUrlSuffixFromPostgresFilterBuilder")>]
 module GetUrlSuffixFromPostgresFilterBuilderTests =
