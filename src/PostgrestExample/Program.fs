@@ -1,14 +1,12 @@
 ﻿open Postgrest
-open Postgrest.Connection
 
-let baseUrl = "https://uxdshctvypcjmjmwqndw.supabase.co/rest/v1"
-let apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZHNoY3R2eXBjam1qbXdxbmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjU5MTQ4MDEsImV4cCI6MTk4MTQ5MDgwMX0.qUXjcOXhZJtYQX4q32YlCnppIpxbd8mf4x5-tA8tUpA"
+let baseUrl = "https://<url>.supabase.co/rest/v1"
+let apiKey = "<api-key>"
 
 let conn = postgrestConnection {
      url baseUrl
      headers (Map [ "apiKey", apiKey
-                    "Bearer", apiKey ]
-    )
+                    "Authorization", $"Bearer {apiKey}" ] )
 }
 
 type Test = {
@@ -16,67 +14,12 @@ type Test = {
     name: string
 }
 
-type Director = {
-    id: int
-}
-
-type X = {
-    name: string
-}
-
-type Film = {
-    id: int
-    title: string
-    director: Director
-}
-
-let testData =
-    {
-        name = "Testik22"
-    }
-
 let result =
     conn
     |> from "test"
     |> select All
-    // |> in' ("name", ["Return of Jedi"; "Anakin"])
-    // |> filter (OpEqual ("filled", Bool false))
-    // |> is ("id", IsNull)
-    // |> order [("id", Some Descending, None)]
-    // |> fts ("name", FtsNot (Fts (["Return"], None)))
-    // |> like ("name", "%Anakin%")
-    // |> select (Cols ["first_name"; "last_name" ; "films(title)"])
-    // |> update testData
-    // |> delete
-    // |> select (COLS ["title"; "director:directors(id,last_name)"])
-    // |> filter (EQ ("id", Int 1)) 
-    // |> select (Some ["id" ; "title" ; "director(id)"])
-    // |> in_ ("id", [ 1; 2 ])
-    // |> filter (EQ ("id", Int 6))
-    // |> one
-    |> execute
-    // |> getResponseBody
-    |> parseResponse<Test list>
-   
-    
+    |> PostgrestFilterBuilder.execute<Test list>
 
-printfn $"{result}"
-
-// result |> List.iter (fun item -> printfn $"{item}")
-
-// let res =
-//     conn
-//     |> from "test"
-//     |> delete
-//     |> filter (EQ ("id", Int 4))
-//     |> executeDelete
-
-// let testData =
-//     [ { id = 3 ; name = "Vader" }
-//       { id = 4 ; name = "Obivan" } ]
-//     
-// let insertion =
-//     conn
-//     |> from "test"
-//     |> insert testData
-//     |> executeInsert
+match result with
+| Ok r    -> printf $"{r}"
+| Error e -> printfn $"{e}"

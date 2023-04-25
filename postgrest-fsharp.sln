@@ -9,7 +9,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Postgrest", "src\Postgrest\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PostgrestExample", "src\PostgrestExample\PostgrestExample.fsproj", "{3216D3DD-AEBC-4E78-9E98-99B180870EE0}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PostgrestTests", "src\PostgrestTests\PostgrestTests.fsproj", "{E1D44F95-099C-48F0-9518-2D81B92DE18C}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PostgrestTest", "src\PostgrestTest\PostgrestTest.fsproj", "{E1D44F95-099C-48F0-9518-2D81B92DE18C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
