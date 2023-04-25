@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>PostgrestFilterBuilder (postgrest-fsharp)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Samuel Dubovec">
+
+    <link rel="stylesheet" id="theme_link" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.6.0/materia/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="../content/navbar-fixed-left.css" />
+    <link type="text/css" rel="stylesheet" href="../content/fsdocs-default.css" />
+    <link type="text/css" rel="stylesheet" href="../content/fsdocs-custom.css" />
+    <script type="text/javascript" src="../content/fsdocs-tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- BEGIN SEARCH BOX: this adds support for the search box -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/JavaScript-autoComplete/1.0.4/auto-complete.css" />
+    <!-- END SEARCH BOX: this adds support for the search box -->
+    
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-secondary fixed-left" id="fsdocs-nav">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse navbar-nav-scroll" id="navbarsExampleDefault">
+            <a href="../"><img id="fsdocs-logo" src="../content/img/logo.jpeg" /></a>
+            <!-- BEGIN SEARCH BOX: this adds support for the search box -->
+            <div id="header">
+                <div class="searchbox" id="fsdocs-searchbox">
+                    <label for="search-by">
+                        <i class="fas fa-search"></i>
+                    </label>
+                    <input data-search-input="" id="search-by" type="search" placeholder="Search..." />
+                    <span data-search-clear="">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- END SEARCH BOX: this adds support for the search box -->
+            <ul class="navbar-nav">
+                <li class="nav-header">Links</li>
+                <li class="nav-item" id="fsdocs-license-link"><a class="nav-link" href="https://github.com/Samo8/postgrest-fsharp/blob/master/LICENSE">License</a></li>
+                <li class="nav-item" id="fsdocs-release-notes-link"><a class="nav-link" href="https://github.com/Samo8/postgrest-fsharp/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+                <li class="nav-item" id="fsdocs-repository-link"><a class="nav-link" href="https://github.com/Samo8/postgrest-fsharp/">Source Repository</a></li>
+                
+                <li class="nav-header">
+  API Reference
+</li>             
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">
+    All Namespaces
+  </a>
+</li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="masthead">
+            <h3 class="muted"><a href="../">postgrest-fsharp</a></h3>
+        </div>
+        <hr />
+        <div class="container" id="fsdocs-content">
+            <div>
+  <h2>
+    PostgrestFilterBuilder Module
+  </h2>
+  <dl class="fsdocs-metadata">
+    <dt>
+      Namespace: 
+      <a href="../reference/postgrest.html">
+        Postgrest
+      </a>
+    </dt>
+    <dt>
+      Assembly: Postgrest.dll
+    </dt>
+  </dl>
+  <div class="fsdocs-xmldoc">
+    <div>
+      <p class="fsdocs-summary">
+        <p>Contains functions and types for for executing and filtering operations</p>
+
+
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3>
+      Types
+    </h3>
+    <table class="table outer-list fsdocs-entity-list">
+      <thead>
+        <tr>
+          <td>
+            Type
+          </td>
+          <td>
+            Description
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fsdocs-entity-name">
+            <p>
+              <a name="ILikeFilter">
+                <a href="../reference/postgrest-postgrestfilterbuilder-ilikefilter.html">
+                  ILikeFilter
+                </a>
+              </a>
+            </p>
+          </td>
+          <td class="fsdocs-entity-xmldoc">
+            <div>
+              <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:T:Postgrest.PostgrestFilterBuilder.ILikeFilter`')">
+                <img src="../content/img/copy-md.png" class="normal"/>
+                <img src="../content/img/copy-md-hover.png" class="hover"/>
+              </div>
+              <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'T:Postgrest.PostgrestFilterBuilder.ILikeFilter\'/>')">
+                <img src="../content/img/copy-xml.png" class="normal"/>
+                <img src="../content/img/copy-xml-hover.png" class="hover"/>
+              </div>
+              <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L14-14" class="fsdocs-source-link" title="Source on GitHub">
+                <img src="../content/img/github.png" class="normal"/>
+                <img src="../content/img/github-hover.png" class="hover"/>
+              </a>
+              <p class="fsdocs-summary">
+                <p>Represents ilike filter</p>
+
+
+              </p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-entity-name">
+            <p>
+              <a name="LikeFilter">
+                <a href="../reference/postgrest-postgrestfilterbuilder-likefilter.html">
+                  LikeFilter
+                </a>
+              </a>
+            </p>
+          </td>
+          <td class="fsdocs-entity-xmldoc">
+            <div>
+              <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:T:Postgrest.PostgrestFilterBuilder.LikeFilter`')">
+                <img src="../content/img/copy-md.png" class="normal"/>
+                <img src="../content/img/copy-md-hover.png" class="hover"/>
+              </div>
+              <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'T:Postgrest.PostgrestFilterBuilder.LikeFilter\'/>')">
+                <img src="../content/img/copy-xml.png" class="normal"/>
+                <img src="../content/img/copy-xml-hover.png" class="hover"/>
+              </div>
+              <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L12-12" class="fsdocs-source-link" title="Source on GitHub">
+                <img src="../content/img/github.png" class="normal"/>
+                <img src="../content/img/github-hover.png" class="hover"/>
+              </a>
+              <p class="fsdocs-summary">
+                <p>Represents like filter</p>
+
+
+              </p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-entity-name">
+            <p>
+              <a name="Pattern">
+                <a href="../reference/postgrest-postgrestfilterbuilder-pattern.html">
+                  Pattern
+                </a>
+              </a>
+            </p>
+          </td>
+          <td class="fsdocs-entity-xmldoc">
+            <div>
+              <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:T:Postgrest.PostgrestFilterBuilder.Pattern`')">
+                <img src="../content/img/copy-md.png" class="normal"/>
+                <img src="../content/img/copy-md-hover.png" class="hover"/>
+              </div>
+              <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'T:Postgrest.PostgrestFilterBuilder.Pattern\'/>')">
+                <img src="../content/img/copy-xml.png" class="normal"/>
+                <img src="../content/img/copy-xml-hover.png" class="hover"/>
+              </div>
+              <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L10-10" class="fsdocs-source-link" title="Source on GitHub">
+                <img src="../content/img/github.png" class="normal"/>
+                <img src="../content/img/github-hover.png" class="hover"/>
+              </a>
+              <p class="fsdocs-summary">
+                <p>Represents pattern</p>
+
+
+              </p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h3>
+      Functions and values
+    </h3>
+    <table class="table outer-list fsdocs-member-list">
+      <thead>
+        <tr>
+          <td class="fsdocs-member-list-header">
+            Function or value
+          </td>
+          <td class="fsdocs-member-list-header">
+            Description
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '18', 18)" onmouseover="showTip(event, '18', 18)">
+                <p>
+                  <a id="execute">
+                    <a href="#execute">
+                      <code><span>execute&#32;<span>pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="18">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>execute&#32;<span>pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><span><a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-fsharpresult-2">Result</a>&lt;<span>'T,&#32;<a href="../reference/postgrest-http-postgresterror.html">PostgrestError</a></span>&gt;</span></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('```cref:M:Postgrest.PostgrestFilterBuilder.execute``1```')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.execute``1\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L17-17" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Executes given <a href="../reference/postgrest-postgrestfilterbuilder.html" title="PostgrestFilterBuilder"><code>PostgrestFilterBuilder</code></a> query and deserializes response</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><span><a href="https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-fsharpresult-2">Result</a>&lt;<span>'T,&#32;<a href="../reference/postgrest-http-postgresterror.html">PostgrestError</a></span>&gt;</span></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '19', 19)" onmouseover="showTip(event, '19', 19)">
+                <p>
+                  <a id="filter">
+                    <a href="#filter">
+                      <code><span>filter&#32;<span>filter&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="19">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>filter&#32;<span>filter&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        filter
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-filterhelpers-filter.html">Filter</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.filter`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.filter\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L27-27" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds filter to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    filter
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-filterhelpers-filter.html">Filter</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '20', 20)" onmouseover="showTip(event, '20', 20)">
+                <p>
+                  <a id="fts">
+                    <a href="#fts">
+                      <code><span>fts&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="20">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>fts&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        arg0
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        arg1
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-ftshelpers-fulltextsearch.html">FullTextSearch</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.fts`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.fts\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L87-87" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds full text search to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg0
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg1
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-ftshelpers-fulltextsearch.html">FullTextSearch</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '21', 21)" onmouseover="showTip(event, '21', 21)">
+                <p>
+                  <a id="ilike">
+                    <a href="#ilike">
+                      <code><span>ilike&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="21">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>ilike&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        arg0
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        arg1
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-postgrestfilterbuilder-pattern.html">Pattern</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.ilike`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.ilike\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L59-59" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds ilike pattern filter to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg0
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg1
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-postgrestfilterbuilder-pattern.html">Pattern</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '22', 22)" onmouseover="showTip(event, '22', 22)">
+                <p>
+                  <a id="in'">
+                    <a href="#in'">
+                      <code><span>in'&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="22">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>in'&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        arg0
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        arg1
+                      </b>
+                      :
+                      <code><span>'a&#32;list</span></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('```cref:M:Postgrest.PostgrestFilterBuilder.in'``1```')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.in'``1\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L34-34" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds in filter to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg0
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg1
+                  </span>
+                  :
+                  <code><span>'a&#32;list</span></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '23', 23)" onmouseover="showTip(event, '23', 23)">
+                <p>
+                  <a id="is">
+                    <a href="#is">
+                      <code><span>is&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="23">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>is&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        arg0
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        arg1
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-isfilterhelpers-isfiltervalue.html">IsFilterValue</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.is`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.is\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L46-46" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds is filter to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg0
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg1
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-isfilterhelpers-isfiltervalue.html">IsFilterValue</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
+                <p>
+                  <a id="like">
+                    <a href="#like">
+                      <code><span>like&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="24">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>like&#32;<span><span>(<span>arg1,&#32;arg2</span>)</span>&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        arg0
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        arg1
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-postgrestfilterbuilder-pattern.html">Pattern</a></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.like`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.like\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L53-53" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds like pattern filter to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg0
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-column.html">Column</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    arg1
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-postgrestfilterbuilder-pattern.html">Pattern</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
+                <p>
+                  <a id="limit">
+                    <a href="#limit">
+                      <code><span>limit&#32;<span>items&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="25">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>limit&#32;<span>items&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        items
+                      </b>
+                      :
+                      <code>int</code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.limit`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.limit\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L79-79" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds limit to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    items
+                  </span>
+                  :
+                  <code>int</code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '26', 26)" onmouseover="showTip(event, '26', 26)">
+                <p>
+                  <a id="offset">
+                    <a href="#offset">
+                      <code><span>offset&#32;<span>items&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="26">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>offset&#32;<span>items&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        items
+                      </b>
+                      :
+                      <code>int</code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.offset`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.offset\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L83-83" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds offset to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    items
+                  </span>
+                  :
+                  <code>int</code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
+                <p>
+                  <a id="one">
+                    <a href="#one">
+                      <code><span>one&#32;<span>pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="27">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>one&#32;<span>pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.one`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.one\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L96-96" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Updates header to expect only one result to be returned</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="fsdocs-member-usage">
+            <div>
+              <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
+                <p>
+                  <a id="order">
+                    <a href="#order">
+                      <code><span>order&#32;<span>orderBy&#32;pfb</span></span></code>
+                    </a>
+                  </a>
+                </p>
+              </code>
+              <div class="fsdocs-tip" id="28">
+                <div class="member-tooltip">
+                  Full Usage: 
+                  <code><span>order&#32;<span>orderBy&#32;pfb</span></span></code>
+                  <br/>
+                  <br/>
+                  Parameters: 
+                  <ul>
+                    <span>
+                      <b>
+                        orderBy
+                      </b>
+                      :
+                      <code><span><span>(<span><a href="../reference/postgrest-common-column.html">Column</a>&#32;*&#32;<span><a href="../reference/postgrest-orderbyhelpers-ordertype.html">OrderType</a>&#32;option</span>&#32;*&#32;<span><a href="../reference/postgrest-orderbyhelpers-ordernull.html">OrderNull</a>&#32;option</span></span>)</span>&#32;list</span></code>
+                    </span>
+                    <br/>
+                    <span>
+                      <b>
+                        pfb
+                      </b>
+                      :
+                      <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                    </span>
+                    <br/>
+                  </ul>
+                  <br/>
+                  <span>
+                    Returns: 
+                    <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                  </span>
+                  <br/>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="fsdocs-member-xmldoc">
+            <details>
+              <summary>
+                <div class="fsdocs-summary">
+                  <div class="fsdocs-source-link" title="Copy signature (Markdown)" onclick="Clipboard_CopyTo('`cref:M:Postgrest.PostgrestFilterBuilder.order`')">
+                    <img src="../content/img/copy-md.png" class="normal"/>
+                    <img src="../content/img/copy-md-hover.png" class="hover"/>
+                  </div>
+                  <div class="fsdocs-source-link" title="Copy signature (XML)" onclick="Clipboard_CopyTo('<see cref=\'M:Postgrest.PostgrestFilterBuilder.order\'/>')">
+                    <img src="../content/img/copy-xml.png" class="normal"/>
+                    <img src="../content/img/copy-xml-hover.png" class="hover"/>
+                  </div>
+                  <a href="https://github.com/Samo8/postgrest-fsharp/tree/master/src/Postgrest/PostgrestFilterBuilder.fs#L65-65" class="fsdocs-source-link" title="Source on GitHub">
+                    <img src="../content/img/github.png" class="normal"/>
+                    <img src="../content/img/github-hover.png" class="hover"/>
+                  </a>
+                  <p class="fsdocs-summary">
+                    <p>Adds ordering to query</p>
+
+
+                  </p>
+                </div>
+              </summary>
+              <dl class="fsdocs-params">
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    orderBy
+                  </span>
+                  :
+                  <code><span><span>(<span><a href="../reference/postgrest-common-column.html">Column</a>&#32;*&#32;<span><a href="../reference/postgrest-orderbyhelpers-ordertype.html">OrderType</a>&#32;option</span>&#32;*&#32;<span><a href="../reference/postgrest-orderbyhelpers-ordernull.html">OrderNull</a>&#32;option</span></span>)</span>&#32;list</span></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+                <dt class="fsdocs-param">
+                  <span class="fsdocs-param-name">
+                    pfb
+                  </span>
+                  :
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-param-docs"></dd>
+              </dl>
+              <dl class="fsdocs-returns">
+                <dt>
+                  <span class="fsdocs-return-name">
+                    Returns: 
+                  </span>
+                  <code><a href="../reference/postgrest-common-postgrestfilterbuilder.html">PostgrestFilterBuilder</a></code>
+                </dt>
+                <dd class="fsdocs-return-docs"></dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+            
+        </div>
+
+        <!-- BEGIN SEARCH BOX: this adds support for the search box -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/JavaScript-autoComplete/1.0.4/auto-complete.css" />
+        <script type="text/javascript">var fsdocs_search_baseurl = '../';</script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.8/lunr.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/JavaScript-autoComplete/1.0.4/auto-complete.min.js"></script>
+        <script type="text/javascript" src="../content/fsdocs-search.js"></script>
+        <!-- END SEARCH BOX: this adds support for the search box -->
+    </div>
+</body>
+
+</html>
