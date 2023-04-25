@@ -1,9 +1,11 @@
-namespace Postgrest.Connection
+namespace Postgrest
 
 open System.Net.Http
 
+/// Contains CE for creating connection
 [<AutoOpen>]
 module Connection =
+    /// Represents base connection
     type PostgrestConnection = {
         Url: string
         Headers: Map<string, string>

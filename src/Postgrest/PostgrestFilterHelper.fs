@@ -4,8 +4,10 @@ open System.Net.Http
 open System.Text
 open Postgrest.Http
 
+/// Contains helper functions and types for `PostgrestFilterBuilder.fs` module
 [<AutoOpen>]
 module PostgrestFilterBuilderHelper =
+    /// Constructs url suffix from all `Query` params
     let getUrlSuffixFromPostgresFilterBuilder (pfb: PostgrestFilterBuilder): string =
         let query = pfb.Query
         
@@ -26,16 +28,19 @@ module PostgrestFilterBuilderHelper =
         
         urlSuffix
     
+    /// Executes select query
     let internal executeSelect<'T> (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
         
         pfb.Query.Connection |> get urlSuffix None
         
+    /// Executes delete query
     let internal executeDelete (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
             
         pfb.Query.Connection |> delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) None
     
+    /// Executes update query
     let internal executeUpdate (pfb: PostgrestFilterBuilder): Result<HttpResponseMessage, PostgrestError> =
         match pfb.Body with
         | Some body ->
@@ -45,8 +50,10 @@ module PostgrestFilterBuilderHelper =
             pfb.Query.Connection |> patch urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) content
         | _ -> Error { message = "Missing request body" ; statusCode = None }
 
+/// Contains helper functions and types for filtering operations
 [<AutoOpen>]
 module FilterHelpers =
+    /// Represents possible filter values
     type FilterValue =
         | String of string
         | Int    of int
@@ -54,6 +61,7 @@ module FilterHelpers =
         | Float  of float
         | Bool   of bool
     
+    /// Represents filter item (how and what to filter)
     type Filter =
         | OpEqual            of  Column * FilterValue
         | OpGreaterThan      of  Column * FilterValue
@@ -65,6 +73,7 @@ module FilterHelpers =
         | OpOr               of  Filter * Filter
         | OpAnd              of  Filter * Filter
 
+    /// Converts `FilterValue` to it's string representation
     let private parseFilterValue (filterValue: FilterValue): string =
         match filterValue with
         | String s -> s
@@ -73,6 +82,7 @@ module FilterHelpers =
         | Float  f -> f.ToString()
         | Bool   b -> b.ToString().ToLower()
     
+    /// Builds result filter string
     let rec internal buildFilterString (filter: Filter): string =
         match filter with
         | OpEqual            (field, value) -> $"{field}=eq."  + parseFilterValue value
@@ -85,20 +95,27 @@ module FilterHelpers =
         | OpOr               (f1, f2)       -> "or=("  + buildFilterString f1 + "," + buildFilterString f2 + ")"
         | OpAnd              (f1, f2)       -> "and=(" + buildFilterString f1 + "," + buildFilterString f2 + ")"
         
+/// Contains helper functions and types for ordering operations
 [<AutoOpen>]
 module OrderByHelpers =
+    /// Represents ordering options
     type OrderType =
         | Ascending
         | Descending
         
+    /// Represents null ordering options
     type OrderNull =
         | NullFirst
         | NullLast
         
+    /// Returns first item in triple
     let private first (a, _, _) = a
+    /// Returns second item in triple
     let private middle (_, b, _) = b
+    /// Returns third item in triple
     let private third (_, _, c) = c 
     
+    /// Returns order by string representation
     let internal getOrderByString (orderBy: string * OrderType option * OrderNull option): string =
         let item = orderBy |> first
         
@@ -121,14 +138,17 @@ module OrderByHelpers =
         let orderByString = $"{item}{orderType}{orderNull}"
         orderByString
         
+/// Contains is filter helper functions and types
 [<AutoOpen>]
 module IsFilterHelpers =
+     /// Represents is filter possible values
      type IsFilterValue =
         | IsNull
         | IsTrue
         | IsFalse
         | IsUnknown
         
+     /// Returns `IsFilterValue` string representation
      let getIsFilterValue (isFilter: IsFilterValue): string =
         match isFilter with
         | IsNull    -> "null"
@@ -136,30 +156,40 @@ module IsFilterHelpers =
         | IsFalse   -> "false"
         | IsUnknown -> "unknown"
         
+/// Contains full text search helper functions and types
 [<AutoOpen>]
 module FtsHelpers =
+    /// Represents text of full text search
     type FtsQuery = string
+    
+    /// Represents full text search language
     type Language = string
+    
+    /// Represents full text search type
     type FullTextSearch =
         | Fts    of FtsQuery list * Language option
         | Plfts  of FtsQuery list * Language option
         | Phfts  of FtsQuery list * Language option
         | Wfts   of FtsQuery list * Language option
         | FtsNot of FullTextSearch
-        
+    
+    /// Joins given full text search params to string    
     let private joinFtsParams (ftsParams: string list): string =
         match ftsParams.IsEmpty with
         | true -> ""
         | _    -> ftsParams |> List.reduce (fun acc item -> acc + "%20" + item)
         
+    /// Parses optional full text search config (language)
     let private parseFtsConfig (config: string option): string =
         match config with
         | Some v -> "(" + v + ")"
         | _      -> ""
         
+    /// Constructs full text search item string representation 
     let private buildFtsStringInner (prefix: string) (config: Language Option) (query: FtsQuery list): string =
         $"{prefix}{parseFtsConfig config}.{joinFtsParams query}"
     
+    /// Constructs full text search query string representation 
     let rec internal buildFtsString (fts: FullTextSearch): string = 
         match fts with
             | Fts    (query, config) -> buildFtsStringInner "fts" config query

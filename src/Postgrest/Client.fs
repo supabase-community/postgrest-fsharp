@@ -6,13 +6,16 @@ open FSharp.Json
 open Postgrest.Connection
 open Postgrest.Common
     
+/// Contains functions for base SQL queries. Communicates with [Postgrest](https://supabase.com/docs/guides/database/overview)
 [<AutoOpen>]
-module Client =   
+module Client =
+    /// Creates `Query` with connection and given table name
     let from (table: string) (conn: PostgrestConnection): Query =
         { Connection  = conn
           Table       = table
           QueryString = "" }
         
+    /// Creates `PostgrestFilterBuilder`with select `Query` type
     let select (columns: Columns) (query: Query): PostgrestFilterBuilder =
         let queryString = parseColumns columns
         
@@ -29,6 +32,7 @@ module Client =
           Body              = None
           RequestType       = Select }
         
+    /// Creates `PostgrestFilterBuilder`with delete `Query` type
     let delete (query: Query): PostgrestFilterBuilder =
         { Query             = { query with QueryString = "?delete" }
           QueryFilterString = None
@@ -43,6 +47,7 @@ module Client =
           Body              = None
           RequestType       = Delete }
         
+    /// Creates `PostgrestFilterBuilder`with update `Query` type and given data as body
     let update (data: 'a) (query: Query): PostgrestFilterBuilder =
         let body = Json.serialize data
         
@@ -59,17 +64,14 @@ module Client =
           Body              = Some body
           RequestType       = Update }
         
+    /// Creates `PostgrestBuilder`with insert `Query` type and given data as body
     let insert (data: 'a) (query: Query): PostgrestBuilder =
         let body = Json.serialize data
         
         { Query = { query with QueryString = "?insert" }
           Body  = body }
-        
-    let getResponseBody (responseMessage: HttpResponseMessage): string = 
-        responseMessage.Content.ReadAsStringAsync()
-        |> Async.AwaitTask
-        |> Async.RunSynchronously
      
+    /// Updates Bearer token in connection Header and returns new StorageConnection
     let updateBearer (bearer: string) (connection: PostgrestConnection): PostgrestConnection =
         let formattedBearer = $"Bearer {bearer}"
         let headers =
