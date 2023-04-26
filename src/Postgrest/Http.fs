@@ -41,27 +41,23 @@ module Http =
         | Error e -> Result.Error e
         
     /// Executes http response with given headers, requestMessage and handles possible exceptions
-    let executeHttpRequest (requestMessage: HttpRequestMessage) (connection: PostgrestConnection): Result<HttpResponseMessage, PostgrestError> =
-        try
-            let httpClient = connection.HttpClient
-            let result =
-                task {
-                    let connectionHeaders =
-                        match requestMessage.Headers.Contains "Authorization" &&
-                              connection.Headers.ContainsKey "Authorization" with
-                        | true -> connection.Headers.Remove "Authorization"
-                        | false -> connection.Headers
-                    addRequestHeaders connectionHeaders requestMessage.Headers
-                    
-                    let response = httpClient.SendAsync(requestMessage)
-                    return! response
-                } |> Async.AwaitTask |> Async.RunSynchronously
-            match result.StatusCode with
-            | HttpStatusCode.OK -> Result.Ok result
-            | statusCode        -> Result.Error { message    = getResponseBody result
-                                                  statusCode = Some statusCode }
-        with e -> Result.Error { message    = e.ToString()
-                                 statusCode = None }
+    let executeHttpRequest (requestMessage: HttpRequestMessage) (connection: PostgrestConnection)
+                           : Async<Result<HttpResponseMessage, PostgrestError>> =
+        async {
+            try
+                let httpClient = connection.HttpClient
+                let connectionHeaders =
+                    match requestMessage.Headers.Contains "Authorization" && connection.Headers.ContainsKey "Authorization" with
+                    | true -> connection.Headers.Remove "Authorization"
+                    | false -> connection.Headers
+                addRequestHeaders connectionHeaders requestMessage.Headers
+                let! response = httpClient.SendAsync(requestMessage) |> Async.AwaitTask
+                match response.StatusCode with
+                | HttpStatusCode.OK -> return Result.Ok response
+                | statusCode -> return Result.Error { message = getResponseBody response; statusCode = Some statusCode }
+            with e -> return Result.Error { message = e.ToString(); statusCode = None }
+        }
+
             
     /// Constructs HttpRequestMessage with given method, url and optional headers
     let private getRequestMessage (httpMethod: HttpMethod) (url: string) (urlSuffix: string)
@@ -74,14 +70,14 @@ module Http =
         
     /// Performs http GET request
     let get (urlSuffix: string) (headers: Map<string, string> option)
-            (connection: PostgrestConnection): Result<HttpResponseMessage, PostgrestError> =
+            (connection: PostgrestConnection): Async<Result<HttpResponseMessage, PostgrestError>> =
         let requestMessage = getRequestMessage HttpMethod.Get connection.Url urlSuffix headers
 
         executeHttpRequest requestMessage connection
         
     /// Performs http DELETE request
     let delete (urlSuffix: string) (headers: Map<string, string> option) (content: HttpContent option)
-               (connection: PostgrestConnection): Result<HttpResponseMessage, PostgrestError> =
+               (connection: PostgrestConnection): Async<Result<HttpResponseMessage, PostgrestError>> =
         let requestMessage = getRequestMessage HttpMethod.Delete connection.Url urlSuffix headers
         match content with
         | Some c -> requestMessage.Content <- c
@@ -91,7 +87,7 @@ module Http =
     
     /// Performs http POST request
     let post (urlSuffix: string) (headers: Map<string, string> option) (content: StringContent)
-             (connection: PostgrestConnection): Result<HttpResponseMessage, PostgrestError> =
+             (connection: PostgrestConnection): Async<Result<HttpResponseMessage, PostgrestError>> =
         let requestMessage = getRequestMessage HttpMethod.Post connection.Url urlSuffix headers
         requestMessage.Content <- content
         
@@ -99,7 +95,7 @@ module Http =
             
     /// Performs http PATCH request
     let patch (urlSuffix: string) (headers: Map<string, string> option) (content: StringContent)
-              (connection: PostgrestConnection): Result<HttpResponseMessage, PostgrestError> =
+              (connection: PostgrestConnection): Async<Result<HttpResponseMessage, PostgrestError>> =
         let requestMessage = getRequestMessage HttpMethod.Patch connection.Url urlSuffix headers
         requestMessage.Content <- content
         

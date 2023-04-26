@@ -14,14 +14,16 @@ module PostgrestFilterBuilder =
     type ILikeFilter = Column * Pattern
     
     /// Executes given `PostgrestFilterBuilder` query and deserializes response
-    let execute<'T> (pfb: PostgrestFilterBuilder): Result<'T, PostgrestError> = 
-        let response =
-            match pfb.RequestType with
-            | Select -> pfb |> executeSelect
-            | Delete -> pfb |> executeDelete
-            | Update -> pfb |> executeUpdate
-            
-        deserializeResponse<'T> response
+    let execute<'T> (pfb: PostgrestFilterBuilder): Async<Result<'T, PostgrestError>> = 
+        async {
+            let! response =
+                match pfb.RequestType with
+                | Select -> pfb |> executeSelect
+                | Delete -> pfb |> executeDelete
+                | Update -> pfb |> executeUpdate
+                
+            return deserializeResponse<'T> response
+        }
     
     /// Adds filter to query
     let filter (filter: Filter) (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
