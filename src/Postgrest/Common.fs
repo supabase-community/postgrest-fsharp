@@ -6,7 +6,7 @@ open Postgrest.Connection
 /// Contains helper functions for another modules and shared types
 [<AutoOpen>]
 module Common =
-    /// Represents query with neccesary info
+    /// Represents query with necessary info
     type Query = {
         Connection:  PostgrestConnection
         Table:       string
