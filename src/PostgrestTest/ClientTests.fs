@@ -227,7 +227,7 @@ module ExecuteTests =
                   RequestType       = Select }
             
             // Act
-            let result = PostgrestFilterBuilder.execute<SelectResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<SelectResponse> pfb |> Async.RunSynchronously
 
             // Assert
             match result with
@@ -275,7 +275,7 @@ module ExecuteTests =
                   RequestType       = Select }
             
             // Act
-            let result = PostgrestFilterBuilder.execute<SelectResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<SelectResponse> pfb |> Async.RunSynchronously
 
             // Assert
             match result with
@@ -334,7 +334,7 @@ module ExecuteTests =
                   RequestType       = Delete }
             
             // Act
-            let result = PostgrestFilterBuilder.execute<DeleteResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<DeleteResponse> pfb |> Async.RunSynchronously
 
             // Assert
             match result with
@@ -382,7 +382,7 @@ module ExecuteTests =
                   RequestType       = Delete }
             
             // Act
-            let result = PostgrestFilterBuilder.execute<DeleteResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<DeleteResponse> pfb |> Async.RunSynchronously
 
             // Assert
             match result with
@@ -448,7 +448,7 @@ module ExecuteTests =
                   RequestType       = Update }
             
             // Act
-            let result = PostgrestFilterBuilder.execute<UpdateResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<UpdateResponse> pfb |> Async.RunSynchronously 
 
             // Assert
             match result with
@@ -503,7 +503,7 @@ module ExecuteTests =
                   RequestType       = Update }
             
             // Act
-            let result = PostgrestFilterBuilder.execute<UpdateResponse> pfb 
+            let result = PostgrestFilterBuilder.execute<UpdateResponse> pfb |> Async.RunSynchronously
 
             // Assert
             match result with

@@ -19,6 +19,7 @@ let result =
     |> from "test"
     |> select All
     |> PostgrestFilterBuilder.execute<Test list>
+    |> Async.RunSynchronously
 
 match result with
 | Ok r    -> printf $"{r}"
