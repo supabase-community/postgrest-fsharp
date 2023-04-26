@@ -15,9 +15,11 @@ let ``postgrestConnection should create connection with given url and headers`` 
         url "https://xxx.supabase.co/rest/v1"
         headers Map["apiKey", "exampleApiKey"]
     }
+    let clientInfoKey, clientInfoValue = Connection.clientInfo
     
     connection.Url     |> should equal "https://xxx.supabase.co/rest/v1"
-    connection.Headers |> should equal Map["apiKey", "exampleApiKey"]
+    connection.Headers |> should equal Map[ clientInfoKey, clientInfoValue
+                                            "apiKey", "exampleApiKey" ]
     
 [<Fact>]
 let ``from should set up Table in returned Query`` () =
