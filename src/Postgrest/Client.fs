@@ -71,18 +71,11 @@ module Client =
         { Query = { query with QueryString = "?insert" }
           Body  = body }
      
-    /// Updates Bearer token in connection Header and returns new StorageConnection
+    /// Updates Bearer token in connection Header and returns new PostgrestConnection
     let updateBearer (bearer: string) (connection: PostgrestConnection): PostgrestConnection =
         let formattedBearer = $"Bearer {bearer}"
         let headers =
-            match connection.Headers.ContainsKey "Authorization" with
-            | true  ->
-                connection.Headers
-                |> Seq.map (fun (KeyValue (k, v)) ->
-                        match k with
-                        | "Authorization" -> (k, formattedBearer)
-                        | _               -> (k, v))
-                |> Map
-            | false ->
-                connection.Headers |> Map.add "Authorization" formattedBearer
+            connection.Headers |> Map.change "Authorization" (fun authorization ->
+                match authorization with | Some _ | None -> Some formattedBearer
+            )
         { connection with Headers = headers }
