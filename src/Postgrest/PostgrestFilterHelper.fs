@@ -30,24 +30,24 @@ module PostgrestFilterBuilderHelper =
     
     /// Executes select query
     let internal executeSelect<'T> (pfb: PostgrestFilterBuilder): Async<Result<HttpResponseMessage, PostgrestError>> =
-        let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
+        let urlSuffix = getUrlSuffixFromPostgresFilterBuilder pfb
         
-        pfb.Query.Connection |> get urlSuffix None
+        get urlSuffix None pfb.Query.Connection
         
     /// Executes delete query
     let internal executeDelete (pfb: PostgrestFilterBuilder): Async<Result<HttpResponseMessage, PostgrestError>> =
-        let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
+        let urlSuffix = getUrlSuffixFromPostgresFilterBuilder pfb
             
-        pfb.Query.Connection |> delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) None
+        delete urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) None pfb.Query.Connection
     
     /// Executes update query
     let internal executeUpdate (pfb: PostgrestFilterBuilder): Async<Result<HttpResponseMessage, PostgrestError>> =
         match pfb.Body with
         | Some body ->
-            let urlSuffix = pfb |> getUrlSuffixFromPostgresFilterBuilder
+            let urlSuffix = getUrlSuffixFromPostgresFilterBuilder pfb
             let content = new StringContent(body, Encoding.UTF8, "application/json")
             
-            pfb.Query.Connection |> patch urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) content
+            patch urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) content pfb.Query.Connection
         | _ -> async { return Error { message = "Missing request body" ; statusCode = None } }
 
 /// Contains helper functions and types for filtering operations

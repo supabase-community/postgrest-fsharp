@@ -16,4 +16,4 @@ module PostgrestBuilder =
         let query = pb.Query
         let urlSuffix = $"{query.Table}{query.QueryString}"
         
-        pb.Query.Connection |> get urlSuffix None
+        get urlSuffix None pb.Query.Connection
