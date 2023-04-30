@@ -65,7 +65,7 @@ module Client =
           RequestType       = Update }
         
     /// Creates `PostgrestBuilder`with insert `Query` type and given data as body
-    let insert (data: 'a) (query: Query): PostgrestBuilder =
+    let insert<'T> (data: 'T) (query: Query): PostgrestBuilder =
         let body = Json.serialize data
         
         { Query = { query with QueryString = "?insert" }

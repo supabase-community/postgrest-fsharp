@@ -29,7 +29,7 @@ module Http =
             | Error e -> Result.Error e
         with
             | :? System.NullReferenceException as ex -> Error { message = ex.Message ; statusCode = None }
-            | _ -> Error { message = "Unexpected error" ; statusCode = None }
+            | e -> Error { message = e.Message ; statusCode = None }
         
     /// Deserializes empty (unit) response
     let deserializeEmptyResponse (response: Result<HttpResponseMessage, PostgrestError>): Result<unit, PostgrestError> =
@@ -47,7 +47,7 @@ module Http =
                 
                 let! response = httpClient.SendAsync(requestMessage) |> Async.AwaitTask
                 match response.StatusCode with
-                | HttpStatusCode.OK -> return Result.Ok response
+                | HttpStatusCode.OK | HttpStatusCode.Created -> return Result.Ok response
                 | statusCode -> return Result.Error { message = getResponseBody response; statusCode = Some statusCode }
             with e -> return Result.Error { message = e.ToString(); statusCode = None }
         }

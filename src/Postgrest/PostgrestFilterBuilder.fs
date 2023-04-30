@@ -96,17 +96,19 @@ module PostgrestFilterBuilder =
         
     /// Updates header to expect only one result to be returned
     let one (pfb: PostgrestFilterBuilder): PostgrestFilterBuilder =
-        let updatedHeaders =
-            match pfb.Query.Connection.Headers.TryFind "Accept" with
-            | Some header ->
-                let headers = header.Split "/"
-                match headers.Length = 2 with
-                | true ->
-                    pfb.Query.Connection.Headers.Add("Accept", $"{headers[0]}/vnd.pgrst.object+{headers[1]}")
-                | false ->
-                    pfb.Query.Connection.Headers.Add("Accept", $"{headers[0]}/vnd.pgrst.object")
-            | None        -> pfb.Query.Connection.Headers.Add("Accept", "application/vnd.pgrst.object")
-        
-        { pfb with Query = { pfb.Query with Connection = { Headers = updatedHeaders
-                                                           Url = pfb.Query.Connection.Url
-                                                           HttpClient = pfb.Query.Connection.HttpClient } } }
+        let updatedQuery = one pfb.Query
+        { pfb with Query = updatedQuery }
+        // let updatedHeaders =
+        //     match pfb.Query.Connection.Headers.TryFind "Accept" with
+        //     | Some header ->
+        //         let headers = header.Split "/"
+        //         match headers.Length = 2 with
+        //         | true ->
+        //             pfb.Query.Connection.Headers.Add("Accept", $"{headers[0]}/vnd.pgrst.object+{headers[1]}")
+        //         | false ->
+        //             pfb.Query.Connection.Headers.Add("Accept", $"{headers[0]}/vnd.pgrst.object")
+        //     | None        -> pfb.Query.Connection.Headers.Add("Accept", "application/vnd.pgrst.object")
+        //
+        // { pfb with Query = { pfb.Query with Connection = { Headers = updatedHeaders
+        //                                                    Url = pfb.Query.Connection.Url
+        //                                                    HttpClient = pfb.Query.Connection.HttpClient } } }
