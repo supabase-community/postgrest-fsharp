@@ -1,6 +1,8 @@
 namespace Postgrest
 
+open System.Net.Http
 open System.Net.Http.Headers
+open System.Text
 open Postgrest.Connection
 
 /// Contains helper functions for another modules and shared types
@@ -65,3 +67,23 @@ module Common =
         
     /// Parses value of optional query string. If not given empty string is returned
     let internal parseOptionalQueryString (queryString: string option): string = ("", queryString) ||> Option.defaultValue
+    
+    /// Creates `StringContent` from Json encoded string
+    let getStringContent (body: string) = new StringContent(body, Encoding.UTF8, "application/json")
+    
+    let internal one (query: Query): Query =
+        let updatedHeaders =
+            match query.Connection.Headers.TryFind "Accept" with
+            | Some header ->
+                let headers = header.Split "/"
+                match headers.Length = 2 with
+                | true ->
+                    query.Connection.Headers.Add("Accept", $"{headers[0]}/vnd.pgrst.object+{headers[1]}")
+                | false ->
+                    query.Connection.Headers.Add("Accept", $"{headers[0]}/vnd.pgrst.object")
+            | None        -> query.Connection.Headers.Add("Accept", "application/vnd.pgrst.object")
+        
+        { query with Connection =
+                        { Headers    = updatedHeaders
+                          Url        = query.Connection.Url
+                          HttpClient = query.Connection.HttpClient } }

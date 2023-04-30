@@ -45,7 +45,7 @@ module PostgrestFilterBuilderHelper =
         match pfb.Body with
         | Some body ->
             let urlSuffix = getUrlSuffixFromPostgresFilterBuilder pfb
-            let content = new StringContent(body, Encoding.UTF8, "application/json")
+            let content = getStringContent body
             
             patch urlSuffix (Some (Map [ "Prefer" , "return=representation" ] )) content pfb.Query.Connection
         | _ -> async { return Error { message = "Missing request body" ; statusCode = None } }
