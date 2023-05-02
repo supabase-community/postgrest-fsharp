@@ -1,11 +1,10 @@
 namespace Postgrest
 
 open System.Net.Http
-open System.Text
+open Postgrest.Common
 open Postgrest.Http
 
 /// Contains helper functions and types for `PostgrestFilterBuilder.fs` module
-[<AutoOpen>]
 module PostgrestFilterBuilderHelper =
     /// Constructs url suffix from all `Query` params
     let getUrlSuffixFromPostgresFilterBuilder (pfb: PostgrestFilterBuilder): string =

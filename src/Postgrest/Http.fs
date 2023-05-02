@@ -7,7 +7,6 @@ open Postgrest.Common
 open Postgrest.Connection
 
 /// Contains functions for performing http request and serialization/deserialization of data
-[<AutoOpen>]
 module Http =
     /// Represents error for postgrest
     type PostgrestError = {
