@@ -8,6 +8,8 @@ open Moq.Protected
 open Xunit
 open FsUnit.Xunit
 open Postgrest
+open Postgrest.Common
+open Postgrest.Http
 
 [<Fact>]
 let ``postgrestConnection should create connection with given url and headers`` () =

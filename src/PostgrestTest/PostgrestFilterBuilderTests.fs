@@ -3,6 +3,7 @@ module PostgrestFilterBuilderTests
 open FsUnit.Xunit
 open Xunit
 open Postgrest
+open Postgrest.Common
 
 let connection = postgrestConnection {
     url "https://xxx.supabase.co/rest/v1"
