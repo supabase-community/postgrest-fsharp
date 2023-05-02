@@ -87,3 +87,12 @@ module Common =
                         { Headers    = updatedHeaders
                           Url        = query.Connection.Url
                           HttpClient = query.Connection.HttpClient } }
+        
+    /// Updates Bearer token in connection Header and returns new PostgrestConnection
+    let updateBearer (bearer: string) (connection: PostgrestConnection): PostgrestConnection =
+        let formattedBearer = $"Bearer {bearer}"
+        let headers =
+            connection.Headers |> Map.change "Authorization" (fun authorization ->
+                match authorization with | Some _ | None -> Some formattedBearer
+            )
+        { connection with Headers = headers }

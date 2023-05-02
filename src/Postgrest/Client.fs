@@ -70,12 +70,3 @@ module Client =
         
         { Query = { query with QueryString = "?insert" }
           Body  = body }
-     
-    /// Updates Bearer token in connection Header and returns new PostgrestConnection
-    let updateBearer (bearer: string) (connection: PostgrestConnection): PostgrestConnection =
-        let formattedBearer = $"Bearer {bearer}"
-        let headers =
-            connection.Headers |> Map.change "Authorization" (fun authorization ->
-                match authorization with | Some _ | None -> Some formattedBearer
-            )
-        { connection with Headers = headers }
