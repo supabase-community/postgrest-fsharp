@@ -3,6 +3,7 @@ module PostgrestFilterBuilderHelperTests
 open FsUnit.Xunit
 open Xunit
 open Postgrest
+open Postgrest.Common
 
 [<Collection("getUrlSuffixFromPostgresFilterBuilder")>]
 module GetUrlSuffixFromPostgresFilterBuilderTests =

@@ -3,6 +3,7 @@ module CommonTests
 open FsUnit.Xunit
 open Xunit
 open Postgrest
+open Postgrest.Common
 
 [<Collection("parseColumns")>]
 module ParseColumnsTests =

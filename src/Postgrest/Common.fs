@@ -6,7 +6,6 @@ open System.Text
 open Postgrest.Connection
 
 /// Contains helper functions for another modules and shared types
-[<AutoOpen>]
 module Common =
     /// Represents query with necessary info
     type Query = {
