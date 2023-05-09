@@ -1,7 +1,7 @@
 ﻿open Postgrest
 open Postgrest.Common
 
-let baseUrl = "https://<url>.supabase.co/rest/v1"
+let baseUrl = "https://<project-id>.supabase.co/rest/v1"
 let apiKey = "<api-key>"
 
 let conn = postgrestConnection {
