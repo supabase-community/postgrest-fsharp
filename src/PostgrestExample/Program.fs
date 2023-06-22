@@ -4,7 +4,7 @@ open Postgrest.Common
 let baseUrl = "https://<project-id>.supabase.co/rest/v1"
 let apiKey = "<api-key>"
 
-let conn = postgrestConnection {
+let connection = postgrestConnection {
      url baseUrl
      headers (Map [ "apiKey", apiKey
                     "Authorization", $"Bearer {apiKey}" ] )
@@ -16,9 +16,12 @@ type Test = {
 }
 
 let result =
-    conn
+    connection
     |> from "test"
     |> select All
+    |> filter (OpLessThanEqual ("id", (Int 5)))
+    |> order [("id" ,(Some OrderType.Ascending), None)]
+    |> limit 3
     |> PostgrestFilterBuilder.execute<Test list>
     |> Async.RunSynchronously
 
